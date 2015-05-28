@@ -26,3 +26,18 @@
 *.exe
 *.out
 *.app
+
+# Fichiers VISUAL
+*.sdf
+*.sln
+*.vcxproj
+*.filters
+*.user
+*.ilk
+*.pdb
+*.idb
+*.log
+*.tlog
+*.db
+*.ipch
+*.tmp
