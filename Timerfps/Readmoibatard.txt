@@ -1,0 +1,331 @@
+Bonjour mon pti groumfy merci de me lire.
+Je te souhaite la bienvenue dans le monde du pti code fini à la pisse des bois.
+
+Pour commencer parlons de la facon dont j'ai structuré les commentaires afin que
+tu te retrouve dans ce code qui décidemment sent le fion de renard écrasé sur la route.
+
+Dans le main sont séparés les grandes parties par 3 lignes de //
+Par exemple pour la gestion des skills:
+
+//
+//Gestion des skills
+//
+
+Puis dans ces grandes parties chaque action du code est résumé
+par une ligne de commentaire au dessus de celle-ci.
+
+Pour une meilleur lisibilité j'ai ajouté quelques // au moment où la boucle
+principale rentre dans la partie affichage à savoir:
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////Affichage
+/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+au moins c'est clair.
+
+Passons maintenant à la structure du code, je vais séparer les
+grandes parties par 3lignes de // et les écrires dans l'ordre
+afin qu'il te soit possible de t'y référer aux moments qui te siéront.
+/*mode monarque off*/
+
+Voici la structure du code :
+
+Note: Tu peux passer ta souris sur les variables visual studio 
+te dis ce que c'est et parfois y a mes commentaires.
+
+GRAND UN)Le main.cpp: intéragit avec toutes les autres classes parceque c'est un main.
+
+///////////////
+///////////////Includes
+///////////////
+
+OMG DES INCLUDES
+
+///////////////
+///////////////Définitions de constantes
+///////////////
+
+Les constantes principales du jeu sont définies ici
+
+///////////////
+///////////////LTtexture et LTimer
+///////////////
+
+Deux classes d'un tuto qui servent à afficher du texte et à gèrer le temps.
+Ne t'en occupe pas pour l'instant tu les verra très peu a par LTexture dans
+le hud et pour l'affichage des fps. 
+
+///////////////
+///////////////La classe Input
+///////////////
+
+Pas besoin de la lire non plus elle gère les inputs les appels se font
+avec input. donc tu les reconnaitra très facilement dans le main.
+
+///////////////
+///////////////La fonction init()
+///////////////
+
+La fonction d'initialisation de la SDL, elle crée une fenêtre et un renderer. 
+
+///////////////
+///////////////close()
+///////////////
+
+Une fonction du tuto qui ferme la SDL
+
+///////////////
+///////////////Le main!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+///////////////
+
+Alors on est pas direct dans la boucle principale il y a pleins 
+d'initialisation à faire
+
+///////////////Initialisations
+Ici tout est commenté rien a dire a part pour les Sprite, il y a
+6 roger sur la map en Sprite et pas en Unit qui sont buggés car pas affichés
+mais séléctionnables et ils peuvent provoquer un crash du jeu :).
+Les trouveras-tu?
+
+j'ai mis après les Unit et la Map un :
+
+//Taffage du fogofwar
+//
+
+c'est le deuxième brouillon en cours pour le fogofwar t'est pas obligé de le
+lire tout de suite ça va te casser la tête c'est très long. Descend jusqu'à
+(note : il y a un 3eme broullion dans la partie affichage c'est les 3seuls)
+
+//
+//
+//Fin du brouillon du fogofwar
+
+
+///////////////Boucle principale!!
+
+Le vif du sujet
+
+///////////////
+///////////////Gestion des inputs
+///////////////
+
+///////////////
+///////////////Deplacements de la camera
+///////////////
+
+Alors oui, y a pas de max caméra au clavier, code fini à la pisse.
+
+///////////////
+///////////////Actions du click gauche avec impossibilitée de laisser appuyer
+///////////////
+
+Comprend un test pour savoir si on clic sur le hud, et les lancers de skill
+
+Note: pour les lancers de skills comme pour la séléction,
+tu verra le test:
+if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
+
+En fait pour les actions avec majuscule, on test si majuscule est relaché, 
+et si oui, on reset la liste d'action avant d'y ajouter l'action a faire.
+Si majuscule est enfoncé, on ajoute l'action à la liste sans reset.
+
+///////////////
+///////////////Actions du clic gauche en laissant appuyer(séléction)
+///////////////
+
+Test si on clic sur le hud
+Test du LSHIFT
+Boucle for pour la séléction
+Lis juste un des if tous les autres sont pareils
+
+///////////////
+///////////////Relâchement du clic gauche
+///////////////
+
+///////////////
+///////////////Actions du clic droit(déplacements)
+///////////////
+
+Principalement les déplacements.
+On test si un skill est séléctionné, si oui il est déséléctionné.
+Sinon on déplace les unités séléctionnées après un test sur majuscule.
+
+///////////////
+///////////////Relâchement du clic droit
+///////////////
+
+///////////////
+///////////////Actions des unités
+///////////////
+
+Ici les actions sont traités et pas décidés.
+En fait tout se passe dans action() qui est appelé pour toutes
+les unités à chaque tour de boucle. Elle sera détaillée plus tard.
+
+///////////////
+///////////////Mise a jour du hud et du vecteur d'unitées séléctionnées lorsque le click gauche est relaché
+///////////////
+
+J'ai détaillé les commentaires dans le code plutôt qu'ici,
+c'est plutôt simple a lire car les noms sont clairs.
+A noter quand même: priorityunit est un pointeur sur une unité, choisie avec
+priorityunit_index, voir le moment où TAB est gérée.
+
+///////////////
+///////////////Gestion des skills
+///////////////
+
+Alors ici je vais détailler un peu le fonctionnement des skills:
+par exemple le premier, séléctionné avec C pour le skill move.
+Avec C je selectionne pour toutes les unités séléctionnées
+le skill à la case 0 et je met le booléen selectedskill à true.
+
+Explications:
+En fait toutes les unités ont un tableau de skills
+qui contient les int correspondant à leurs skills.
+à la case 0 se trouve le int 1, qui correspond à l'action 
+move pour la fonction action()
+Avec la touche C j'ai donc séléctionné le skill à la case 0,
+quand je ferais un clic gauche pour lancer le skill j'enverrais
+à mon vecteur d'actions le skill à la case 0 (en l'occurence 1)
+et cette action 1 sera traitée dans action().
+
+ATTENTION!
+Toutes les unités ont les memes skills dans les 5premières cases
+à savoir move, stop, hold, patrol, moveattack.
+les cases 6 et + contiennent les vrais skills de l'unitée
+
+Exemple:
+unité1.skills = { 1,0,2,3,4,13,7,20}
+unité2.skills = { 1,0,2,3,4,16,8,14}
+unité3.skills = { 1,0,2,3,4,13,12,7}
+
+unité3.skills = { move, stop, hold, patrol, moveattack, bouledefeu, bouledeglace, boulepoilue}
+
+C'est pourquoi ces 5premiers skills peuvent être séléctionnés par
+toutes les unités séléctionnées.
+Les suivants ne sont séléctionnés que pour l'unité prioritaire.
+
+En lançant le jeu comme tu peux le voir à droite du hud se trouvent les
+5skills communs à toutes les unités comme dans sc2, les suivants qui sont 
+les skills de l'unité prioritaire sont affichés au milieu comme dans dota/wow.
+
+(note: go lire skills.txt)
+
+
+//////////////////////////////
+//////////////////////////////
+//////////////////////////////Affichage
+//////////////////////////////
+//////////////////////////////
+
+Juste avant le clear du renderer se trouve l'affichage des fps ducoup il s'affiche
+après tout le reste et donc au dessus de tout le reste.
+Alors après le clear on dessine la map, puis les unités,
+ET LA 400 LIGNES DE BROUILLON BOOOOOOOOOM
+
+////////Au sujet du fogofwar
+//////////////////////////////////////////////////////////////////
+
+Alors si tu veux taffer la dessus ne t'occupe pas de ce qui est en commentaire
+c'est la meme chose que ce qui n'est pas en commentaire fait de 18façons différentes
+la plus opti n'est pas en commentaire mais en code.
+
+Ce qui est utile est écrit de la ligne:
+rect_fogofwar.x = 0 + (int)CameraX;	(ligne 1866)
+
+à la ligne: 
+SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);	(ligne1953)
+
+En fait c'est très simple et très court:
+
+
+-On lock la texture:
+SDL_LockTexture(texture_fogofwar, nullptr, static_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
+
+Les pixels deviennent accessibles grace a void* fogofwar_pixels, un pointeur qui pointe
+sur la première case mémoire où sont stockés les pixels.
+
+Avec fogofwar_pixels + 1 on pointe sur la deuxième case(mais pas le deuxième pixel un pixel 
+occupe 4 cases je l'explique plus loin).
+fogofwar_pitch contient le nombre de cases pour une ligne de pixels.
+
+fogofwar_pixels + y * fogofwar_pitch pointe sur le premier pixel de la première ligne si y = 0
+fogofwar_pixels + y * fogofwar_pitch pointe sur le premier pixel de la deuxième ligne si y = 1
+
+Pour être clair un pixel est contenu sur 32bits mais p est un Uint8 donc 8bits pour un octet
+ce qui correspond à une case mémoire.
+Un pixel occupe 4 cases mémoires.
+En fait on ne pointe donc avec p que sur l'adresse de la première case mémoire du pixel
+
+La ligne ci dessous va donc stocker dans p l'adresse de la première case mémoire du pixel
+en x et y :
+
+p = (Uint8 *)fogofwar_pixels + y * fogofwar_pitch + x * surface_fogofwar->format->BytesPerPixel;
+
+La deuxième ligne va convertir p en 32bits afin qu'on écrive sur 4cases mémoires à partir de la 
+première case dont l'adresse est contenue dans p.
+On écrit ici
+
+*(Uint32 *)p = fogofwar_remove_pixels[lolx];
+
+le pixel est donc remplacé par celui de fogofwar_remove_pixels qui est un tableau de pixel
+d'une surface de 100x100 qui contient une image de 100x100 qui est un cercle transparent
+entouré de blanc.
+
+Alors c'est dégeulasse mais tu peux changer cette ligne par:
+
+*(Uint32 *)p = transparent;
+
+transparent étant un Uint32 contenant un pixel transparent.
+
+Si tu souhaite avoir le vrai effet de fogofwar recherché tu dois chercher ces trois lignes:
+
+SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
+SDL_memcpy(fogofwar_pixels, surface_fogofwar->pixels, surface_fogofwar->pitch*surface_fogofwar->h);
+SDL_UnlockTexture(texture_fogofwar);
+
+qui sont dans le brouillon 2 et mettre cette ligne :
+
+SDL_memcpy(fogofwar_pixels, surface_fogofwar->pixels, surface_fogofwar->pitch*surface_fogofwar->h);
+
+au dessus de la boucle for et en dessous du SDL_LockTexture.
+
+Afin de remettre tous les pixels du fogofwar en noir semi transparent a chaque tour de boucle.
+C'est la que c'est ultra lourd car ça fait des millions de pixels....
+
+Et à priori c'est la seule chose à faire j'ai imaginé des solutions de type le cercle transparent
+est entouré par du noir semi-transparent donc ça efface au fur et a mesure mais imagine 
+quand deux unités ont la meme vision l'une va ecrire du gris sur le transparent de l'autre...
+
+Ou alors on garde en mémoire les pixels changés à la frame précédente on test si ceux-ci sont dans
+le champ de vision d'une unité, sinon on les remets gris.
+Mais même là pour 5 unités avec une vision de 100x100 ça fait 5000pixels a mettre dans un tableau 
+dynamique à chaque frame... et 100x100 c'est rien comme tu peu le voir. (en fait j'ai mieux plus bas)
+
+Pour moi la meilleure solution est d'avoir un fogofwar sur tout l'écran et pas sur la map, qui se 
+reset a chaque frame et où les endroits censés être transparent à l'écran sont rendus transparent.
+
+La meilleure façon de le faire je pense est d'utiliser ta formule magique qui dessine des disques
+pour rendre les pixels autour d'une unité transparents.
+Et ce pour les unités a proximité de l'écran/caméra.
+
+Je pense que cette solution qui semble simple est aussi la meilleure car on peut imaginer des
+optimisations comme un tableau qui contiendrait les pixels a changer pour ne pas avoir a changer
+deux fois le même quand deux unités ont la même vision mais finalement on ne fait que copier 
+32bits pour chaque pixel ça vaut mieux à priori que d'avoir a faire des tests sur ceux 
+qui sont à traiter ou non.
+
+Pour ce qui est d'éviter le reset du fogofwar à chaque frame la meilleure chose à faire serait 
+d'utiliser la position de l'unité à la frame précédente, et de changer son champ de vision en gris
+avant de rendre transparent son champ de vision actuel.
+Mais là encore on rentre dans des boucles for très lourdes peut-être plus lourdes au final
+qu'un memcpy sur toute la texture de l'écran.
+
+Bref je te laisse cogiter la dessus il est 6h du mat jvai commenter ce que je peux sur les classes
+pour la suite de l'affichage c'est ez tu comprendra sans moi lol.
+
+////////////////////////////////////////////////////////////////////
+/////////Fin de la parenthèse sur le fogofwar

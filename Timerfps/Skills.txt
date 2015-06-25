@@ -1,0 +1,38 @@
+
+ATTENTION!!!! l'action stop est l'action 0, donc le skill 0 à la case 1,
+inversement l'action move est l'action 1, donc le skill 1 à la case 0
+
+Les skills sont représentés par des int pour les fonctions action d'Unit, drawskills d'Hud et Useskill de Skills
+
+convention:
+int 0-4:
+
+move,stop,hold,patrol,moveattack
+
+int 5-??:
+
+5:grenade
+
+
+
+Toutes les unités alliés ont un vecteur de skills qui contiennent leurs skills utilisables
+
+de la case 0 à 4 le vecteur contient move,stop,hold,patrol,attack
+
+de 5 à ?? le vecteur contient les skills de l'unité.
+
+
+rappel sur les actions des unités alliés:
+les actions sont représentées par des int pour le switch de la fonction action() 
+
+0 = stop, le currentaction se remet a 0 lorsqu'il n'y a aucune action dans le vecteur d'actions action_list
+
+1 = move
+
+2 = holdposition, met holdposition à true
+
+3 = patrol
+
+4 = moveattack
+
+5 = grenade
