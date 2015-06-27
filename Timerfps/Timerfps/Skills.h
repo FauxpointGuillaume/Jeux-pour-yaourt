@@ -45,7 +45,6 @@ private:
 	int mousexy[2];
 	Sprite* unit_sprite = NULL;
 	Unit* targetunit = NULL;
-	Sprite* hand_grenade_sprite = NULL;
 	Unit* unit = NULL;
 	//Unit* unit_lol = new Unit(unit_sprite, "roger", 200, 38, 20, 1, 2, 2, bite, hand_grenade_sprite, 0);
 
@@ -57,6 +56,10 @@ private:
 	bool no_reset;
 	//std::string unit_name;
 
+	//
+	//Hand grenade
+	//
+	Sprite* hand_grenade_sprite = NULL;
 	Sprite* hand_grenade_explosion_sprite = NULL;
 	bool hand_grenade_sprite_destroyed = false;
 	int hand_grenade_timer = 0;

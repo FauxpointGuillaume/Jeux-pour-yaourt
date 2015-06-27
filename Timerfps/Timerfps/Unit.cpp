@@ -5,7 +5,7 @@
 Unit::Unit()
 {}
 
-Unit::Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, float passed_hp, float passed_damage, float passed_attackspeed, float passed_speed, float passed_defense, std::vector<int> passed_skills, Sprite* passed_hudpicture, int passed_friendneutralfoe)
+Unit::Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, float passed_hp, float passed_damage, float passed_attackspeed, float passed_speed, float passed_defense, std::vector<int> & passed_skills, Sprite* passed_hudpicture, int passed_friendneutralfoe)
 {
 	sprite = passed_sprite;
 	name = passed_name;
@@ -16,9 +16,12 @@ Unit::Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, f
 	speed = passed_speed;
 	defense = passed_defense;
 	skills = passed_skills;
+	//skills.reserve(passed_skills.size());
+	//std::copy(passed_skills.begin(), passed_skills.end(), std::back_inserter(skills));
+	//skills.swap(passed_skills);
 	hudpicture = passed_hudpicture;
 	friendneutralfoe = passed_friendneutralfoe;
-	skills.clear();
+	//skills.clear();
 
 
 	//Test
@@ -582,22 +585,25 @@ void Unit::drawlife(SDL_Renderer *renderer, float camerax, float cameray)
 	liferect.h = 10;
 	liferect.w = 50;
 	SDL_RenderFillRect(renderer, &liferect);
-	if (friendneutralfoe == 0)
+	if (hp > 0)
 	{
-		SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+		if (friendneutralfoe == 0)
+		{
+			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+		}
+		if (friendneutralfoe == 1)
+		{
+			SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
+		}if (friendneutralfoe == 2)
+		{
+			SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+		}
+		++liferect.x;
+		++liferect.y;
+		liferect.h = 8;
+		liferect.w = liferect.w*(((hp * 100) / hpmax) / 100) - 2;
+		SDL_RenderFillRect(renderer, &liferect);
 	}
-	if (friendneutralfoe == 1)
-	{
-		SDL_SetRenderDrawColor(renderer, 255, 0, 255, 255);
-	}if (friendneutralfoe == 2)
-	{
-		SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	}
-	++liferect.x;
-	++liferect.y;
-	liferect.h = 8;
-	liferect.w = liferect.w*(((hp*100)/hpmax)/100)-2;
-	SDL_RenderFillRect(renderer, &liferect);
 
 }
 

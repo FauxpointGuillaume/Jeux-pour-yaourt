@@ -30,7 +30,7 @@ and may not be redistributed without written permission.*/
 #include "LTexture.h"
 #include "Skills.h"
 #include "Shader.h"
-
+#include "Bouton.h"
 
 //Frames comptés, unité de temps du jeu(global)
 int countedFrames = 0;
@@ -643,11 +643,11 @@ bool loadMedia()
 void close()
 {
 	//Free loaded images
-	gFPSTextTexture.free();
+	//gFPSTextTexture.free();
 
 
 	//Destroy window	
-	SDL_DestroyRenderer(gRenderer);
+//	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	gRenderer = NULL;
@@ -749,6 +749,20 @@ int Gl_init()
 	return 1;
 }
 */
+
+//bool load_level_from_file(std::string passed_level_file,std::vector<Unit*> passed_allyunits)
+//{
+//	bool level_loaded = true;
+//	std::ifstream mapp(passed_level_file);
+//	int loadlevel_units_number = 0;
+//	std::string loadlevel_mapfile;
+//
+//	return level_loaded;
+//}
+
+
+
+
 int main(int argc, char* args[])
 {
 	float CameraX = 200;
@@ -756,10 +770,24 @@ int main(int argc, char* args[])
 	float hudposx = 0;
 	float hudposy = 0;
 
+	int frameTicks = 0;
+	bool game_game_quit = false;
+	bool level_quit = false;
+
 
 	//ColorKey des surfaces globales
 	SDL_SetColorKey(surface_explosion_grenade, SDL_TRUE, SDL_MapRGB(surface_explosion_grenade->format, 0xFF, 0xFF, 0xFF));
 	SDL_SetColorKey(surface_grenade, SDL_TRUE, SDL_MapRGB(surface_grenade->format, 0xFF, 0xFF, 0xFF));
+
+	bool menu_loaded = false;
+	bool menu_finish = false;
+	std::vector<Bouton*> menu_vector_boutons;
+	int menu_action = 0;
+	LTexture menu_loading_text;
+	menu_loading_text.setFont("Xenotron.ttf", 18);
+	std::stringstream menu_stringstream_loadingtext;
+	std::string menu_string_loadingtext;
+	SDL_Surface *menu_textsurface = NULL;
 
 
 
@@ -817,7 +845,14 @@ int main(int argc, char* args[])
 	bool clickcube2 = false;
 
 	//skills
-	std::vector<int> desskills;							//Vecteur de numéros de skills correspondant à la liste de skills d'une unitée à envoyer à une Unit
+	std::vector<int> desskills;	
+
+	desskills.push_back(1);
+	desskills.push_back(0);
+	desskills.push_back(2);
+	desskills.push_back(3);
+	desskills.push_back(4);
+	desskills.push_back(5);//Vecteur de numéros de skills correspondant à la liste de skills d'une unitée à envoyer à une Unit
 	//desskills.push_back(1);								
 	//desskills.push_back(2);								
 	//desskills.push_back(3);								
@@ -847,7 +882,7 @@ int main(int argc, char* args[])
 	else
 	{
 		//Load media
-		if (!gFPSTextTexture.setFont("lazy.ttf", 28))
+		if (!gFPSTextTexture.setFont("Xenotron.ttf", 28))
 		{
 			printf("Failed to load media!\n");
 		}
@@ -967,479 +1002,657 @@ int main(int argc, char* args[])
 	//		//glShadeModel(GL_FLAT);
 	//
 
-
-
-
-
-
-
-			//
-			//Chargement des sprites
-			//
-			Sprite *defaultsprite = new Sprite(gRenderer, "herbe.jpg", 100, 100, 100, 100, &CameraX, &CameraY);
-
-			Sprite *defaulthudsprite = new Sprite(gRenderer, "herbe.jpg", 300, 660, 100, 100, &hudposx, &hudposy);
-
-			Sprite *bobombe = new Sprite(gRenderer, "animunit.bmp", 100, 100, 100, 100, &CameraX, &CameraY);
-			bobombe->SetUpAnimation(3, 3);
-			Sprite *bobombehud = new Sprite(gRenderer, "animunit.bmp", 300, 660, 100, 100, &hudposx, &hudposy);
-
-			Sprite *unit2 = new Sprite(gRenderer, "animunit.bmp", 100, 100, 10, 100, &CameraX, &CameraY);
-			unit2->SetUpAnimation(3, 3);
-			Sprite *hud3 = new Sprite(gRenderer, "hud.bmp", -2, 590, 1026, 180, &hudposx, &hudposy);
-
-			Sprite *hud2 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
-
-			Sprite *rog1 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
-
-			Sprite *rog2 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
-
-			Sprite *rog3 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
-
-			Sprite *rog4 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
-
-			Sprite *rog5 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
-
-			Sprite *rog6 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
-
-			Sprite *hudhud2 = new Sprite(gRenderer, "bombe1.bmp", 300, 660, 100, 100, &hudposx, &hudposy);
-
-			Sprite *minimap = new Sprite(gRenderer, "herbe.jpg", 0, 0, 200, 200, &hudposx, &hudposy);
-
-			Sprite *zerglingsprite = new Sprite(gRenderer, "zergling.jpg", 400, 200, 100, 100, &CameraX, &CameraY);
-
-			Sprite *zerglinghudsprite = new Sprite(gRenderer, "zergling.jpg", 300, 660, 100, 100, &hudposx, &hudposy);
-
-			//Sprites de la souris
-			Sprite *mouse_sprite = new Sprite(gRenderer, "cursor.bmp", 0, 0, 30, 30, &hudposx, &hudposy);
-
-			Sprite *mouse_sprite_skill = new Sprite(gRenderer, "crosshair.bmp", 0, 0, 30, 30, &hudposx, &hudposy);
-
-
-			//Sprite du chemin des unités
-			Sprite* pathsprite = new Sprite(gRenderer, "path_green_animated_highquality.bmp", 0, 0, 30, 10, &hudposx, &hudposy);
-			pathsprite->SetUpAnimation(1, 3);
-
-			Sprite* destination_circle = new Sprite(gRenderer, "destination_circle.png", 0, 0, 20, 20, &CameraX, &CameraY);
-			destination_circle->SetUpAnimation(8, 1);
-
-			Sprite* destination_circle_skills = new Sprite(gRenderer, "destination_circle_skills.png", 0, 0, 20, 20, &CameraX, &CameraY);
-			destination_circle_skills->SetUpAnimation(8, 1);
-
-			//
-			//Chargement des unités
-			//
-			Unit *defaultunit = new Unit(defaultsprite, "default", 0, 0, 0, 0, 0, 0, desskills, defaulthudsprite, 1);
-
-			Unit *bob = new Unit(bobombe, "bob", 100, 50, 10, 1, 2, 2, desskills, bobombehud, 0);
-			units.push_back(bob);
-			bob->setanim(true);
-			bob->setpath_sprite(pathsprite);
-			bob->skills_pushback(1);
-			bob->skills_pushback(0);
-			bob->skills_pushback(2);
-			bob->skills_pushback(3);
-			bob->skills_pushback(4);
-			bob->skills_pushback(5);
-			//bob->setanimrow_run_right(0);
-			//bob->setanimrow_stand_1(1);
-			//bob->setanimrow_skill_1(2);
-
-			Unit *roger = new Unit(hud2, "roger", 200, 38, 50, 1, 2, 2, desskills, hudhud2, 0);
-			units.push_back(roger);
-			roger->setpath_sprite(pathsprite);
-			roger->skills_pushback(1);
-			roger->skills_pushback(0);
-			roger->skills_pushback(2);
-			roger->skills_pushback(3);
-			roger->skills_pushback(4);
-			roger->skills_pushback(5);
-
-			//Unit *roge = new Unit(rog1, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
-			//units.push_back(roge);
-			//
-			//Unit *rog = new Unit(rog2, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
-			//units.push_back(rog);
-			//
-			//Unit *ro = new Unit(rog3, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
-			//units.push_back(ro);
-			//
-			//Unit *rogr = new Unit(rog4, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
-			//units.push_back(rogr);
-			//
-			//Unit *ror = new Unit(rog5, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
-			//units.push_back(ror);
-			//
-			//Unit *roer = new Unit(rog6, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
-			//units.push_back(roer);
-			//
-			Unit *zergling = new Unit(zerglingsprite, "zergling", 100, 100, 20, 1, 2, 2, desskills, zerglinghudsprite, 2);
-			units.push_back(zergling);
-
-
-			Unit* priorityunit = defaultunit;
-			//
-			//faut vraiment que j'explique tout?
-			//
-			Map *carte = new Map(gRenderer, "lazy.map", &CameraX, &CameraY);
-			std::vector<Sprite*> tiles = carte->getTiles();
-			carte->cleartiles();
-
-
-
-			//Taffage du fogofwar
-			//
-			//Sprite du brouillard de guerre
-	//		Sprite *sprite_fogofwar_remove = new Sprite(gRenderer, "fogofwar_remove_circle.png", 300, 300, 100, 100, &CameraX, &CameraY);
-	//
-	//		SDL_Surface *surface_fogofwar_remove2 = IMG_Load("fogofwar_remove_circle.png");
-	//
-	//		SDL_Surface* surface_fogofwar_remove = SDL_ConvertSurfaceFormat(surface_fogofwar_remove2,
-	//			SDL_PIXELFORMAT_ARGB8888,
-	//			NULL);
-	//
-	//		Uint32* fogofwar_remove_pixels = (Uint32*)surface_fogofwar_remove->pixels;
-	//
-	//
-	//		SDL_Rect map_rect = { 0, 0, carte->getsizex(), carte->getsizey() };
-	//		//SDL_Rect fog_surface_rect
-	//		SDL_Rect fogofwar_rectdeouf = { 100, 100, 200, 200 };
-	//		
-	//		//surface_fogofwar = SDL_CreateRGBSurface(0, map_rect.w, map_rect.h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-	//		surface_fogofwar2 = SDL_CreateRGBSurface(0, map_rect.w, map_rect.h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-	//		
-	//
-	//		SDL_Surface* surface_fogofwar = SDL_ConvertSurfaceFormat(surface_fogofwar2,
-	//		SDL_PIXELFORMAT_ARGB8888,
-	//			NULL);
-	//
-	//
-	//
-	//		void *fogofwar_pixels;
-	//		int fogofwar_pitch;
-	//		Uint32 transparent = SDL_MapRGBA(surface_fogofwar->format, 0, 0, 0, 0);
-	//		Uint32* pixels32;
-	//		int     pixelCount;
-	//
-	//		int lolx = 0;
-	//		int loly = 0;
-	//
-	//		unsigned char* destAlpha;
-	//		unsigned char* srcAlpha = 0;
-	//
-	//
-	//
-	//		Uint32 rgba_fogofwar = SDL_MapRGBA(surface_fogofwar->format, 0, 0, 0, 150);
-	//
-	//		Uint32 *fogofwar_pixel;
-	//		Uint32 fogofwar_pixel2 = SDL_MapRGBA(surface_fogofwar->format, 0, 0, 0, 0);
-	//
-	//		Uint8* p;
-	//		//SDL_Texture* texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
-	//		//SDL_SetTextureBlendMode(texture_fogofwar, SDL_BLENDMODE_BLEND);
-	//
-	//		rect_fogofwar.w = carte->getsizex();
-	//		rect_fogofwar.h = carte->getsizey();
-	//
-	//		//SDL_QueryTexture(texture_fogofwar, (Uint32*)0x16261804, NULL, &surface_fogofwar->w, &surface_fogofwar->h);
-	//		SDL_Texture *texture_fogofwar = SDL_CreateTexture(gRenderer,
-	//			SDL_PIXELFORMAT_ARGB8888,
-	//			SDL_TEXTUREACCESS_STREAMING,
-	//			surface_fogofwar->w,
-	//			surface_fogofwar->h);
-	//		SDL_SetTextureBlendMode(texture_fogofwar, SDL_BLENDMODE_BLEND);
-	//
-	//
-	//		SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-
-
-//			SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
-//			SDL_memcpy(fogofwar_pixels, surface_fogofwar->pixels, surface_fogofwar->pitch*surface_fogofwar->h);
-//			SDL_UnlockTexture(texture_fogofwar);
-//
-
-
-			//SDL_Surface* imageFomatted = SDL_ConvertSurfaceFormat(surface_fogofwar,
-			//	SDL_PIXELFORMAT_RGBA8888,
-			//	NULL);
-			//
-			//
-			//SDL_Texture* Letexture = SDL_CreateTexture(gRenderer,
-			//	SDL_PIXELFORMAT_RGBA8888,
-			//	SDL_TEXTUREACCESS_STREAMING,
-			//	imageFomatted->w, imageFomatted->h);
-			//
-			//
-			//void* Lepixels = NULL;
-			//int Lepitch = 0;
-			//
-			//int width = imageFomatted->w;
-			//int height = imageFomatted->h;
-			//
-			//Uint32* pixels32 = (Uint32*)Lepixels;
-			//int     pixelCount = (Lepitch / 4) * height;
-			//
-			//Uint32 colorKey = SDL_MapRGBA(imageFomatted->format, 255, 255, 255, 255);
-			//Uint32 transparent = SDL_MapRGBA(imageFomatted->format, 0xFF, 0x00, 0xFF, 0x00);
-
-
-			//SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-			//texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-			//
-			//
-			//Fin du brouillon du fogofwar
-
-
-
-
-
-
-			//
-			//gnagnagna hud
-			//
-			Hud *hud = new Hud(gRenderer, hud3, bob, minimap);
-			hud->setunit(defaultunit);
-
-			//Start counting frames per second
-			fpsTimer.start();
-
-			
-
-
-
-
-			//Remplissage des vecteurs d'unités par type
-			for (auto &aze : units) // access by reference to avoid copying
+			while (!game_game_quit)
 			{
-				if (aze->getfriendneutralfoe() == 0)
+				Sprite *sprite_doge = new Sprite(gRenderer, "dogesimple.jpg", 100, 100, 800, 500, &hudposx, &hudposy);
+
+				Sprite *sprite_boutongo = new Sprite(gRenderer, "bouton_go.jpg", 400, 300, 100, 100, &hudposx, &hudposy);
+				Bouton *bouton_golol = new Bouton(sprite_boutongo, 1);
+				menu_vector_boutons.push_back(bouton_golol);
+
+				while (!menu_finish)
 				{
-					allyunits.push_back(aze);
-				}
-				if (aze->getfriendneutralfoe() == 1)
-				{
-					neutralunits.push_back(aze);
-				}
-				if (aze->getfriendneutralfoe() == 2)
-				{
-					ennemyunits.push_back(aze);
-				}
-			}
 
-			//Efface le curseur windows
-			SDL_ShowCursor(SDL_DISABLE);
+					capTimer.start();
 
-			CameraX = 100;
-			CameraY = 100;
-
-
-			//
-			//Boucle principale
-			//
-			while (!quit && !input.getTouche(SDL_SCANCODE_ESCAPE))
-			{
-
-			//	if (countedFrames > 120)
-			//	{
-			//		countedFrames = 0;
-			//		fpsTimer.start();
-			//	}
-
-				//Start cap timer
-				capTimer.start();
-
-				//
-				// Gestion des inputs
-				//
-				input.Update();
-				leftclick_release = false;
-
-				//
-				//Deplacements de la camera
-				//
-				//au clavier
-				if (input.getTouche(SDL_SCANCODE_UP))
-				{
-					CameraY += 2;
-				}if (input.getTouche(SDL_SCANCODE_DOWN))
-				{
-					CameraY -= 2;
-				}if (input.getTouche(SDL_SCANCODE_LEFT))
-				{
-					CameraX += 2;
-				}if (input.getTouche(SDL_SCANCODE_RIGHT))
-				{
-					CameraX -= 2;
-				}
-
-				//a la souris et max camera
-				if (input.MouseX() < 100)
-				{
-					CameraX += 2;
-					if (CameraX > 1000)
-					{
-						CameraX = 1000;
-					}
-
-				}if (input.MouseX() > SCREEN_WIDTH - 100)
-				{
-					CameraX -= 2;
-
-					if (CameraX < -1000)
-					{
-						CameraX = -1000;
-					}
-				}if (input.MouseY() < 100)
-				{
-					CameraY += 2;
-					if (CameraY > 400)
-					{
-						CameraY = 400;
-					}
-				}if (input.MouseY() > SCREEN_HEIGHT - 100)
-				{
-					CameraY -= 2;
-					if (CameraY < -1000)
-					{
-						CameraY = -1000;
-					}
-				}
-
-				//Position du brouillard de guerre
-		//		map_rect.x = -200 + CameraX;
-		//		map_rect.y = -200 + CameraY;
-
-				////////if (skills_mousexy[1] > 600 && selection == false) ///ATEJ
-				////////{
-				////////	if (leftclick)
-				////////	{
-				////////		hud_leftclick = true;
-				////////	}
-				////////	else
-				////////	{
-				////////		hud_leftclick = false;
-				////////	}
-				////////}
-
-
-
-				//
-				//Actions du click gauche avec impossibilitée de laisser appuyer
-				//
-				if (input.MouseButton(SDL_BUTTON_LEFT) && leftclick == false)
-				{
-					leftclick = true;
-					startmousexy[0] = input.MouseX();
-					startmousexy[1] = input.MouseY();
-					if (startmousexy[1] > 600)
-					{
-						hud_leftclick = true;
-					}
-
-					/*
-					for (auto &aze : units) // access by reference to avoid copying
-					{
-					if (input.MouseX() > aze->getsprite()->GetPosition().x && input.MouseX() < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth() && input.MouseY() > aze->getsprite()->GetPosition().y && input.MouseY() < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
-					{
-					aze->setselect(true);
-					}
-					else
-					{
-					aze->setselect(false);
-					}
-					}*/
-
-
-					//!!!!!!!!!!!!!!!!!!!
-					//!!!!!!!!!!!!!!!!
 					//
-					//Faudra pouvoir detruire les skills lancés quand reset
-					// eventuellement faire le active_skills.push_back au moment du action
-					//conclusion : C CHO
+					// Gestion des inputs
 					//
-					if (selectedskill && hud_leftclick == false)
+					input.Update();
+
+
+					//
+					//Actions du click gauche avec impossibilitée de laisser appuyer
+					//
+					if (input.MouseButton(SDL_BUTTON_LEFT) && leftclick == false)
 					{
-						selectedskill = false;
-						skills_mousexy[0] = input.MouseX() - CameraX;
-						skills_mousexy[1] = input.MouseY() - CameraY;
-						for (auto &aze : allyunits)
+						leftclick = true;
+						startmousexy[0] = input.MouseX();
+						startmousexy[1] = input.MouseY();
+					}
+					//
+					//Relâchement du clic gauche
+					//
+					if (input.MouseButton(SDL_BUTTON_LEFT) == false)
+					{
+						if (leftclick)
 						{
-							if (aze->getselectedskill())
-							{
-								//skill_no_reset = false;
-								if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
-								{
-									//aze->setaction_over(true);
-									//aze->setaction_over(true);
-									aze->action_clearlist();
-									aze->setreset_action();
-									aze->mousexylist_clear();
-									aze->setaction_over(true);
-									//aze->skills_bool_clear();
-									//aze->setskill_number(0);
-									//aze->setskill_over(true);
-									//aze->setnumber_of_skill_used(0);
-									//aze->setskill_reset(true);
-									//skill_no_reset = true;
-								}
-								//aze->increment_number_of_skill_used();
-								//aze->skills_bool_pushback(0);
-								//aze->action_pushback(aze->getskills().at(aze->getusedskill()));
-								aze->action_pushback(aze->skills_at(aze->getusedskill()));
-								aze->mousexy_pushback(skills_mousexy[0], skills_mousexy[1]);
-								//active_skills.push_back(Skills(gRenderer, aze, NULL, aze->getskills().at(aze->getusedskill()), &CameraX, &CameraY, skills_mousexy));							
-								aze->setselectedskill(false);
-								//aze->setaction_start(true);
-							}
+							leftclick_release = true;
 						}
+						leftclick = false;
 					}
-				}
 
-				//
-				//Actions du clic gauche en laissant appuyer(séléction)
-				//
-				if (leftclick == true && selectedskill_mouse == false)
-				{
-					if (hud_leftclick == false)
+
+					if (leftclick == true && selectedskill_mouse == false)
 					{
 						mouserect.x = startmousexy[0];
 						mouserect.y = startmousexy[1];
 						mouserect.w = input.MouseX() - startmousexy[0];
 						mouserect.h = input.MouseY() - startmousexy[1];
-						unitselected = false;
-						if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
+
+						for (auto &aze : menu_vector_boutons)
 						{
-							allyselected = false;
-						}
-						selection = true;
-						drawselect = true;
-						for (auto &aze : units)
-						{
-							if (mouserect.x < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth() && mouserect.x > aze->getsprite()->GetPosition().x)
+							if (mouserect.x < aze->bouton_getsprite()->GetPosition().x + aze->bouton_getsprite()->GetWidth() && mouserect.x > aze->bouton_getsprite()->GetPosition().x)
 							{
-								if (mouserect.y < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->getsprite()->GetPosition().y)
+								if (mouserect.y < aze->bouton_getsprite()->GetPosition().y + aze->bouton_getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->bouton_getsprite()->GetPosition().y)
 								{
-									unitselected = true;
-									aze->setpre_select(true);
-									if (aze->getfriendneutralfoe() == 0)
+									aze->bouton_setmouseover(true);
+									if (leftclick)
 									{
-										allyselected = true;
+										aze->bouton_setclick(true);
 									}
 								}
-								else if (mouserect.y > aze->getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
+								else if (mouserect.y > aze->bouton_getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->bouton_getsprite()->GetPosition().y + aze->bouton_getsprite()->GetHeight())
 								{
-									unitselected = true;
-									aze->setpre_select(true);
-									if (aze->getfriendneutralfoe() == 0)
+									aze->bouton_setmouseover(true);
+									if (leftclick)
 									{
-										allyselected = true;
+										aze->bouton_setclick(true);
+									}
+								}
+								else
+								{
+									aze->bouton_setmouseover(false);
+									aze->bouton_setclick(false);
+								}
+							}
+							else if (mouserect.x < aze->bouton_getsprite()->GetPosition().x + aze->bouton_getsprite()->GetWidth() && mouserect.x + mouserect.w > aze->bouton_getsprite()->GetPosition().x)
+							{
+								if (mouserect.y < mouserect.y + mouserect.h)
+								{
+									if (mouserect.y < aze->bouton_getsprite()->GetPosition().y + aze->bouton_getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->bouton_getsprite()->GetPosition().y)
+									{
+										aze->bouton_setmouseover(true);
+										if (leftclick)
+										{
+											aze->bouton_setclick(true);
+										}
+									}
+									else
+									{
+										aze->bouton_setmouseover(false);
+										aze->bouton_setclick(false);
+									}
+								}
+								else if (mouserect.y > mouserect.y + mouserect.h)
+								{
+									if (mouserect.y > aze->bouton_getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->bouton_getsprite()->GetPosition().y + aze->bouton_getsprite()->GetHeight())
+									{
+										aze->bouton_setmouseover(true);
+										if (leftclick)
+										{
+											aze->bouton_setclick(true);
+										}
+									}
+									else
+									{
+										aze->bouton_setmouseover(false);
+										aze->bouton_setclick(false);
+									}
+								}
+							}
+							else if (mouserect.x > aze->bouton_getsprite()->GetPosition().x && mouserect.x + mouserect.w < aze->bouton_getsprite()->GetPosition().x + aze->bouton_getsprite()->GetWidth())
+							{
+								if (mouserect.y < mouserect.y + mouserect.h)
+								{
+									if (mouserect.y < aze->bouton_getsprite()->GetPosition().y + aze->bouton_getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->bouton_getsprite()->GetPosition().y)
+									{
+										aze->bouton_setmouseover(true);
+										if (leftclick)
+										{
+											aze->bouton_setclick(true);
+										}
+									}
+									else
+									{
+										aze->bouton_setmouseover(false);
+										aze->bouton_setclick(false);
+									}
+								}
+								else if (mouserect.y > mouserect.y + mouserect.h)
+								{
+									if (mouserect.y > aze->bouton_getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->bouton_getsprite()->GetPosition().y + aze->bouton_getsprite()->GetHeight())
+									{
+										aze->bouton_setmouseover(true);
+										if (leftclick)
+										{
+											aze->bouton_setclick(true);
+										}
+									}
+									else
+									{
+										aze->bouton_setmouseover(false);
+										aze->bouton_setclick(false);
+									}
+								}
+							}
+							else
+							{
+								aze->bouton_setmouseover(false);
+								aze->bouton_setclick(false);
+							}
+						}
+					}
+
+					for (auto &aze : menu_vector_boutons)
+					{
+						if (leftclick_release)
+						{
+							if (aze->bouton_getclick())
+							{
+								menu_action = aze->bouton_getaction();
+							}
+						}
+					}
+
+
+					switch (menu_action)
+					{
+					case 0:
+						printf("BITE");
+						break;
+					case 1:
+						menu_finish = true;
+						break;
+					default:
+						printf("MESCOUEILSLSEILSEFL");
+						break;
+					}
+
+					//		//Clear screen
+					SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0xFF);
+					SDL_RenderClear(gRenderer);
+
+
+
+					if (!menu_finish)
+					{
+						sprite_boutongo->Draw();
+					}
+					else
+					{
+						for (auto &aze : menu_vector_boutons)
+						{
+							aze->~Bouton();
+						}
+						sprite_doge->Draw();
+						menu_stringstream_loadingtext.str("");
+						menu_stringstream_loadingtext << "Wow \n Such chargement \n Very long \n Many variables" ;
+
+						menu_string_loadingtext = menu_stringstream_loadingtext.str().c_str();
+						//Render text
+						if (!gFPSTextTexture.loadFromRenderedText(gRenderer, menu_textsurface, menu_string_loadingtext, textColor))
+						{
+							printf("Unable to render FPS texture!\n");
+						}
+						//Render textures
+						gFPSTextTexture.render(gRenderer, 200, 600);
+					}
+
+					//
+					//Afficher le tout
+					//
+					SDL_RenderPresent(gRenderer);
+
+					//If frame finished early
+					frameTicks = capTimer.getTicks();
+					if (frameTicks < SCREEN_TICK_PER_FRAME)
+					{
+						//Wait remaining time
+						SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
+					}
+
+				}
+				////////////////////////
+				//Fin de la boucle menu
+
+
+				//
+				//Chargement des sprites
+				//
+				Sprite *defaultsprite = new Sprite(gRenderer, "herbe.jpg", 100, 100, 100, 100, &CameraX, &CameraY);
+
+				Sprite *defaulthudsprite = new Sprite(gRenderer, "herbe.jpg", 300, 660, 100, 100, &hudposx, &hudposy);
+
+				Sprite *bobombe = new Sprite(gRenderer, "animunit.bmp", 100, 100, 100, 100, &CameraX, &CameraY);
+				bobombe->SetUpAnimation(3, 3);
+				Sprite *bobombehud = new Sprite(gRenderer, "animunit.bmp", 300, 660, 100, 100, &hudposx, &hudposy);
+
+				Sprite *unit2 = new Sprite(gRenderer, "animunit.bmp", 100, 100, 10, 100, &CameraX, &CameraY);
+				unit2->SetUpAnimation(3, 3);
+				Sprite *hud3 = new Sprite(gRenderer, "hud.bmp", -2, 590, 1026, 180, &hudposx, &hudposy);
+
+				Sprite *hud2 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
+
+				Sprite *rog1 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
+
+				Sprite *rog2 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
+
+				Sprite *rog3 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
+
+				Sprite *rog4 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
+
+				Sprite *rog5 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
+
+				Sprite *rog6 = new Sprite(gRenderer, "bombe1.bmp", 400, 400, 200, 200, &CameraX, &CameraY);
+
+				Sprite *hudhud2 = new Sprite(gRenderer, "bombe1.bmp", 300, 660, 100, 100, &hudposx, &hudposy);
+
+				Sprite *minimap = new Sprite(gRenderer, "herbe.jpg", 0, 0, 200, 200, &hudposx, &hudposy);
+
+				Sprite *zerglingsprite = new Sprite(gRenderer, "zergling.jpg", 400, 200, 100, 100, &CameraX, &CameraY);
+
+				Sprite *zerglinghudsprite = new Sprite(gRenderer, "zergling.jpg", 300, 660, 100, 100, &hudposx, &hudposy);
+
+				//Sprites de la souris
+				Sprite *mouse_sprite = new Sprite(gRenderer, "cursor.bmp", 0, 0, 30, 30, &hudposx, &hudposy);
+
+				Sprite *mouse_sprite_skill = new Sprite(gRenderer, "crosshair.bmp", 0, 0, 30, 30, &hudposx, &hudposy);
+
+
+				//Sprite du chemin des unités
+				Sprite* pathsprite = new Sprite(gRenderer, "path_green_animated_highquality.bmp", 0, 0, 30, 10, &hudposx, &hudposy);
+				pathsprite->SetUpAnimation(1, 3);
+
+				Sprite* destination_circle = new Sprite(gRenderer, "destination_circle.png", 0, 0, 20, 20, &CameraX, &CameraY);
+				destination_circle->SetUpAnimation(8, 1);
+
+				Sprite* destination_circle_skills = new Sprite(gRenderer, "destination_circle_skills.png", 0, 0, 20, 20, &CameraX, &CameraY);
+				destination_circle_skills->SetUpAnimation(8, 1);
+
+				//
+				//Chargement des unités
+				//
+				Unit *defaultunit = new Unit(defaultsprite, "default", 0, 0, 0, 0, 0, 0, desskills, defaulthudsprite, 1);
+
+				Unit *bob = new Unit(bobombe, "bob", 100, 50, 10, 1, 2, 2, desskills, bobombehud, 0);
+				units.push_back(bob);
+				bob->setanim(true);
+				bob->setpath_sprite(pathsprite);
+		//		bob->skills_pushback(1);
+		//		bob->skills_pushback(0);
+		//		bob->skills_pushback(2);
+		//		bob->skills_pushback(3);
+		//		bob->skills_pushback(4);
+		//		bob->skills_pushback(5);
+				//bob->setanimrow_run_right(0);
+				//bob->setanimrow_stand_1(1);
+				//bob->setanimrow_skill_1(2);
+
+				Unit *roger = new Unit(hud2, "roger", 200, 38, 50, 1, 2, 2, desskills, hudhud2, 0);
+				units.push_back(roger);
+				roger->setpath_sprite(pathsprite);
+		//		roger->skills_pushback(1);
+		//		roger->skills_pushback(0);
+		//		roger->skills_pushback(2);
+		//		roger->skills_pushback(3);
+		//		roger->skills_pushback(4);
+		//		roger->skills_pushback(5);
+
+				//Unit *roge = new Unit(rog1, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
+				//units.push_back(roge);
+				//
+				//Unit *rog = new Unit(rog2, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
+				//units.push_back(rog);
+				//
+				//Unit *ro = new Unit(rog3, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
+				//units.push_back(ro);
+				//
+				//Unit *rogr = new Unit(rog4, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
+				//units.push_back(rogr);
+				//
+				//Unit *ror = new Unit(rog5, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
+				//units.push_back(ror);
+				//
+				//Unit *roer = new Unit(rog6, "roger", 200, 38, 20, 1, 2, 2, desskills, hudhud2, 0);
+				//units.push_back(roer);
+				//
+				Unit *zergling = new Unit(zerglingsprite, "zergling", 100, 100, 20, 1, 2, 2, desskills, zerglinghudsprite, 2);
+				units.push_back(zergling);
+
+
+				Unit* priorityunit = defaultunit;
+				//
+				//faut vraiment que j'explique tout?
+				//
+				Map *carte = new Map(gRenderer, "lazy.map", &CameraX, &CameraY);
+				std::vector<Sprite*> tiles = carte->getTiles();
+				carte->cleartiles();
+
+
+				//
+				//gnagnagna hud
+				//
+				Hud *hud = new Hud(gRenderer, hud3, bob, minimap);
+				hud->setunit(defaultunit);
+
+				//Start counting frames per second
+				fpsTimer.start();
+
+				//Remplissage des vecteurs d'unités par type
+				for (auto &aze : units) // access by reference to avoid copying
+				{
+					if (aze->getfriendneutralfoe() == 0)
+					{
+						allyunits.push_back(aze);
+					}
+					if (aze->getfriendneutralfoe() == 1)
+					{
+						neutralunits.push_back(aze);
+					}
+					if (aze->getfriendneutralfoe() == 2)
+					{
+						ennemyunits.push_back(aze);
+					}
+				}
+
+				//Efface le curseur windows
+				SDL_ShowCursor(SDL_DISABLE);
+
+				CameraX = 100;
+				CameraY = 100;
+
+
+				//
+				//Boucle principale
+				//
+				while (!quit && !game_game_quit)
+				{
+
+					//	if (countedFrames > 120)
+					//	{
+					//		countedFrames = 0;
+					//		fpsTimer.start();
+					//	}
+
+					//Start cap timer
+					capTimer.start();
+
+					//
+					// Gestion des inputs
+					//
+					input.Update();
+					leftclick_release = false;
+
+					if (input.getTouche(SDL_SCANCODE_ESCAPE))
+					{
+						game_game_quit = true;
+					}
+
+					//
+					//Deplacements de la camera
+					//
+					//au clavier
+					if (input.getTouche(SDL_SCANCODE_UP))
+					{
+						CameraY += 2;
+					}if (input.getTouche(SDL_SCANCODE_DOWN))
+					{
+						CameraY -= 2;
+					}if (input.getTouche(SDL_SCANCODE_LEFT))
+					{
+						CameraX += 2;
+					}if (input.getTouche(SDL_SCANCODE_RIGHT))
+					{
+						CameraX -= 2;
+					}
+
+					//a la souris et max camera
+					if (input.MouseX() < 100)
+					{
+						CameraX += 2;
+						if (CameraX > 1000)
+						{
+							CameraX = 1000;
+						}
+
+					}if (input.MouseX() > SCREEN_WIDTH - 100)
+					{
+						CameraX -= 2;
+
+						if (CameraX < -1000)
+						{
+							CameraX = -1000;
+						}
+					}if (input.MouseY() < 100)
+					{
+						CameraY += 2;
+						if (CameraY > 400)
+						{
+							CameraY = 400;
+						}
+					}if (input.MouseY() > SCREEN_HEIGHT - 100)
+					{
+						CameraY -= 2;
+						if (CameraY < -1000)
+						{
+							CameraY = -1000;
+						}
+					}
+
+					//Position du brouillard de guerre
+					//		map_rect.x = -200 + CameraX;
+					//		map_rect.y = -200 + CameraY;
+
+					////////if (skills_mousexy[1] > 600 && selection == false) ///ATEJ
+					////////{
+					////////	if (leftclick)
+					////////	{
+					////////		hud_leftclick = true;
+					////////	}
+					////////	else
+					////////	{
+					////////		hud_leftclick = false;
+					////////	}
+					////////}
+
+
+
+					//
+					//Actions du click gauche avec impossibilitée de laisser appuyer
+					//
+					if (input.MouseButton(SDL_BUTTON_LEFT) && leftclick == false)
+					{
+						leftclick = true;
+						startmousexy[0] = input.MouseX();
+						startmousexy[1] = input.MouseY();
+						if (startmousexy[1] > 600)
+						{
+							hud_leftclick = true;
+						}
+
+						/*
+						for (auto &aze : units) // access by reference to avoid copying
+						{
+						if (input.MouseX() > aze->getsprite()->GetPosition().x && input.MouseX() < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth() && input.MouseY() > aze->getsprite()->GetPosition().y && input.MouseY() < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
+						{
+						aze->setselect(true);
+						}
+						else
+						{
+						aze->setselect(false);
+						}
+						}*/
+
+
+						//!!!!!!!!!!!!!!!!!!!
+						//!!!!!!!!!!!!!!!!
+						//
+						//Faudra pouvoir detruire les skills lancés quand reset
+						// eventuellement faire le active_skills.push_back au moment du action
+						//conclusion : C CHO
+						//
+						if (selectedskill && hud_leftclick == false)
+						{
+							selectedskill = false;
+							skills_mousexy[0] = input.MouseX() - CameraX;
+							skills_mousexy[1] = input.MouseY() - CameraY;
+							for (auto &aze : allyunits)
+							{
+								if (aze->getselectedskill())
+								{
+									//skill_no_reset = false;
+									if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
+									{
+										//aze->setaction_over(true);
+										//aze->setaction_over(true);
+										aze->action_clearlist();
+										aze->setreset_action();
+										aze->mousexylist_clear();
+										aze->setaction_over(true);
+										//aze->skills_bool_clear();
+										//aze->setskill_number(0);
+										//aze->setskill_over(true);
+										//aze->setnumber_of_skill_used(0);
+										//aze->setskill_reset(true);
+										//skill_no_reset = true;
+									}
+									//aze->increment_number_of_skill_used();
+									//aze->skills_bool_pushback(0);
+									//aze->action_pushback(aze->getskills().at(aze->getusedskill()));
+									aze->action_pushback(aze->skills_at(aze->getusedskill()));
+									aze->mousexy_pushback(skills_mousexy[0], skills_mousexy[1]);
+									//active_skills.push_back(Skills(gRenderer, aze, NULL, aze->getskills().at(aze->getusedskill()), &CameraX, &CameraY, skills_mousexy));							
+									aze->setselectedskill(false);
+									//aze->setaction_start(true);
+								}
+							}
+						}
+					}
+
+					//
+					//Actions du clic gauche en laissant appuyer(séléction)
+					//
+					if (leftclick == true && selectedskill_mouse == false)
+					{
+						if (hud_leftclick == false)
+						{
+							mouserect.x = startmousexy[0];
+							mouserect.y = startmousexy[1];
+							mouserect.w = input.MouseX() - startmousexy[0];
+							mouserect.h = input.MouseY() - startmousexy[1];
+							unitselected = false;
+							if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
+							{
+								allyselected = false;
+							}
+							selection = true;
+							drawselect = true;
+							for (auto &aze : units)
+							{
+								if (mouserect.x < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth() && mouserect.x > aze->getsprite()->GetPosition().x)
+								{
+									if (mouserect.y < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->getsprite()->GetPosition().y)
+									{
+										unitselected = true;
+										aze->setpre_select(true);
+										if (aze->getfriendneutralfoe() == 0)
+										{
+											allyselected = true;
+										}
+									}
+									else if (mouserect.y > aze->getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
+									{
+										unitselected = true;
+										aze->setpre_select(true);
+										if (aze->getfriendneutralfoe() == 0)
+										{
+											allyselected = true;
+										}
+									}
+									else
+									{
+										aze->setpre_select(false);
+									}
+								}
+								else if (mouserect.x < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth() && mouserect.x + mouserect.w > aze->getsprite()->GetPosition().x)
+								{
+									if (mouserect.y < mouserect.y + mouserect.h)
+									{
+										if (mouserect.y < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->getsprite()->GetPosition().y)
+										{
+											unitselected = true;
+											aze->setpre_select(true);
+											if (aze->getfriendneutralfoe() == 0)
+											{
+												allyselected = true;
+											}
+										}
+										else
+										{
+											aze->setpre_select(false);
+										}
+									}
+									else if (mouserect.y > mouserect.y + mouserect.h)
+									{
+										if (mouserect.y > aze->getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
+										{
+											unitselected = true;
+											aze->setpre_select(true);
+											if (aze->getfriendneutralfoe() == 0)
+											{
+												allyselected = true;
+											}
+										}
+										else
+										{
+											aze->setpre_select(false);
+										}
+									}
+								}
+								else if (mouserect.x > aze->getsprite()->GetPosition().x && mouserect.x + mouserect.w < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth())
+								{
+									if (mouserect.y < mouserect.y + mouserect.h)
+									{
+										if (mouserect.y < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->getsprite()->GetPosition().y)
+										{
+											unitselected = true;
+											aze->setpre_select(true);
+											if (aze->getfriendneutralfoe() == 0)
+											{
+												allyselected = true;
+											}
+										}
+										else
+										{
+											aze->setpre_select(false);
+										}
+									}
+									else if (mouserect.y > mouserect.y + mouserect.h)
+									{
+										if (mouserect.y > aze->getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
+										{
+											unitselected = true;
+											aze->setpre_select(true);
+											if (aze->getfriendneutralfoe() == 0)
+											{
+												allyselected = true;
+											}
+										}
+										else
+										{
+											aze->setpre_select(false);
+										}
 									}
 								}
 								else
@@ -1447,831 +1660,705 @@ int main(int argc, char* args[])
 									aze->setpre_select(false);
 								}
 							}
-							else if (mouserect.x < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth() && mouserect.x + mouserect.w > aze->getsprite()->GetPosition().x)
+						}
+					}
+					//
+					//Relâchement du clic gauche
+					//
+					if (input.MouseButton(SDL_BUTTON_LEFT) == false)
+					{
+						if (leftclick)
+						{
+							leftclick_release = true;
+						}
+
+						leftclick = false;
+						hud_leftclick = false;
+
+						if (!selectedskill)
+						{
+							selectedskill_mouse = false;
+						}
+					}
+
+					//
+					//Actions du clic droit(déplacements)
+					//
+					if (input.MouseButton(SDL_BUTTON_RIGHT) && rightclick == false) // deuxième condition pour empècher de laisse appuyer
+					{
+						rightclick = true;
+
+						if (selectedskill)
+						{
+							selectedskill = false;
+							priorityunit->setselectedskill(false);
+						}
+						else
+						{
+							//Si l'unité alliée est selectionée, confirmer le deplacement
+							for (auto &aze : allyunits)
 							{
-								if (mouserect.y < mouserect.y + mouserect.h)
+								if (aze->getselect())
 								{
-									if (mouserect.y < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->getsprite()->GetPosition().y)
+									if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
 									{
-										unitselected = true;
-										aze->setpre_select(true);
-										if (aze->getfriendneutralfoe() == 0)
-										{
-											allyselected = true;
-										}
+										//if (aze->action_getlist().size() == 0)
+										//{
+										//	aze->setaction_over(true);
+										//}
+										aze->action_clearlist();
+										aze->setreset_action();
+										aze->mousexylist_clear();
+										aze->setaction_over(true);
+										//aze->setaction_over(true);
+										//aze->skills_bool_clear();
+										//aze->setskill_number(0);
+										//aze->setskill_over(true);
+										//aze->setnumber_of_skill_used(0);
+										//aze->setskill_reset(true);
 									}
-									else
-									{
-										aze->setpre_select(false);
-									}
-								}
-								else if (mouserect.y > mouserect.y + mouserect.h)
-								{
-									if (mouserect.y > aze->getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
-									{
-										unitselected = true;
-										aze->setpre_select(true);
-										if (aze->getfriendneutralfoe() == 0)
-										{
-											allyselected = true;
-										}
-									}
-									else
-									{
-										aze->setpre_select(false);
-									}
+
+									aze->action_pushback(1);
+									//aze->setaction_to_do(1);
+									//aze->setmove(true);
+									mousexy[0] = input.MouseX() - CameraX;
+									mousexy[1] = input.MouseY() - CameraY;
+
+									//aze->get_mousexylist().push_back({ mousexy[0], mousexy[1] });
+									//aze->get_mousexylist().push_back({1,1 });
+									aze->mousexy_pushback(mousexy[0], mousexy[1]);
+									//aze->setaction_start(true);
+
+									//aze->setmousexy(mousexy);
 								}
 							}
-							else if (mouserect.x > aze->getsprite()->GetPosition().x && mouserect.x + mouserect.w < aze->getsprite()->GetPosition().x + aze->getsprite()->GetWidth())
+						}
+
+					}
+
+					//
+					//Relâchement du clic droit
+					//
+					if (input.MouseButton(SDL_BUTTON_RIGHT) == false)
+					{
+						rightclick = false;
+					}
+
+					//
+					//Deplacement et selection de toutes les units (final)
+					//
+					//for (auto &aze : units)
+					//{
+					//	if (aze->getmove())
+					//	{
+					//		aze->moveunit();
+					//	}
+					//	if (aze->getmoving())
+					//	{
+					//		aze->moveunit();
+					//	}
+					//}
+
+					//
+					//Actions des unités
+					//
+					for (auto &aze : units)
+					{
+						aze->action();
+						if (aze->getskill_go())
+						{
+							active_skills.push_back(Skills(gRenderer, aze, NULL, aze->getskill_to_go(), &CameraX, &CameraY, aze->getmousex(), aze->getmousey()));
+							aze->setskill_go(false);
+						}
+					}
+
+					//
+					//Mise a jour du hud et du vecteur d'unitées séléctionnées lorsque le click gauche est relaché
+					//
+					if (leftclick == false && selection == true)
+					{
+						//La préséléction se fait pendant la séléction avec clic gauche. Au relâchement on fait le test
+						if (allyselected)
+						{
+							for (auto &aze : neutralunits)
 							{
-								if (mouserect.y < mouserect.y + mouserect.h)
-								{
-									if (mouserect.y < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight() && mouserect.y + mouserect.h > aze->getsprite()->GetPosition().y)
-									{
-										unitselected = true;
-										aze->setpre_select(true);
-										if (aze->getfriendneutralfoe() == 0)
-										{
-											allyselected = true;
-										}
-									}
-									else
-									{
-										aze->setpre_select(false);
-									}
-								}
-								else if (mouserect.y > mouserect.y + mouserect.h)
-								{
-									if (mouserect.y > aze->getsprite()->GetPosition().y && mouserect.y + mouserect.h < aze->getsprite()->GetPosition().y + aze->getsprite()->GetHeight())
-									{
-										unitselected = true;
-										aze->setpre_select(true);
-										if (aze->getfriendneutralfoe() == 0)
-										{
-											allyselected = true;
-										}
-									}
-									else
-									{
-										aze->setpre_select(false);
-									}
-								}
+								aze->setpre_select(false);
 							}
-							else
+							for (auto &aze : ennemyunits)
 							{
 								aze->setpre_select(false);
 							}
 						}
-					}
-				}
-				//
-				//Relâchement du clic gauche
-				//
-				if (input.MouseButton(SDL_BUTTON_LEFT) == false)
-				{
-					if (leftclick)
-					{
-						leftclick_release = true;
-					}
 
-					leftclick = false;
-					hud_leftclick = false;
-					/*
-					int i = 0;
-					for (auto &aze : selectedunits)
-					{
-					if (aze->getselect() == false)
-					{
-					selectedunits.erase(selectedunits.begin() + i);
-					}
-					++i;
-					}*/
+						for (auto &aze : units)
+						{
+							if (aze->getpre_select())
+							{
+								aze->setselect(true);
+							}
+							else
+							{
+								if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
+								{
+									aze->setselect(false);
+								}
+							}
+						}
 
-					/*
-					auto i = std::begin(active_skills);
+						//Les unités séléctionnées sont placées dans le vecteur d'unités du hud
+						hud->hudunitsclear();
+						selectedallies.clear();
+						selection = false;
+						priorityunit_index = 0;
+						for (auto &aze : units)
+						{
+							if (aze->getselect())
+							{
+								hud->setunit(aze);
+								hud->addunit(aze);
+							}
+						}
 
-					while (i != std::end(active_skills)) {
-					// do some stuff.
-					if (i->getfinish_skill())
-					{
-					i = selectedunits.erase(i);
-					}
-					else
-					{
-					++i;
-					}
-					}*/
+						//Si aucune unité n'est selectionée
+						if (hud->hudunitsempty())
+						{
+							hud->setunit(defaultunit);
+						}
 
-					if (!selectedskill)
-					{
-						selectedskill_mouse = false;
-					}
-					//if (selection)
-					//{
-					//	if (allyselected)
-					//	{
-					//		for (auto &aze : neutralunits)
-					//		{
-					//			aze->setpre_select(false);
-					//		}
-					//		for (auto &aze : ennemyunits)
-					//		{
-					//			aze->setpre_select(false);
-					//		}
-					//	}
-					//
-					//	for (auto &aze : units)
-					//	{
-					//		if (aze->getpre_select())
-					//		{
-					//			aze->setselect(true);
-					//		}
-					//		else
-					//		{
-					//			aze->setselect(false);
-					//		}
-					//	}
-					//}
-				}
 
-				//
-				//Actions du clic droit(déplacements)
-				//
-				if (input.MouseButton(SDL_BUTTON_RIGHT) && rightclick == false) // deuxième condition pour empècher de laisse appuyer
-				{
-					rightclick = true;
-
-					if (selectedskill)
-					{
-						selectedskill = false;
-						priorityunit->setselectedskill(false);
-					}
-					else
-					{
-						//Si l'unité alliée est selectionée, confirmer le deplacement
+						//Remplissage du vecteur d'unités séléctionnées
 						for (auto &aze : allyunits)
 						{
 							if (aze->getselect())
 							{
+								selectedallies.push_back(aze);
+							}
+						}
+					}
+
+					//Si tab est relâché
+					if (input.getTouche(SDL_SCANCODE_TAB) == false)
+					{
+						touche_tab = false;
+					}
+
+					//Changement d'unité prioritaire avec TAB
+					if (selectedallies.size() > 0)
+					{
+						if (input.getTouche(SDL_SCANCODE_TAB) && touche_tab == false)
+						{
+							priorityunit->setselectedskill(false);
+							selectedskill = false;
+							selectedskill_mouse = false;
+							touche_tab = true;
+							priorityunit->setpriority(false);
+							if (priorityunit_index + 1 < selectedallies.size())
+							{
+								++priorityunit_index;
+							}
+							else
+							{
+								priorityunit_index = 0;
+							}
+						}
+					}
+					else
+					{
+						priorityunit = defaultunit;
+					}
+
+					//
+					//Gestion des skills
+					//
+					if (allyselected)
+					{
+						if (selectedallies.size() > 0)
+						{
+							priorityunit = selectedallies[priorityunit_index];
+							priorityunit->setpriority(true);
+						}
+						for (auto &aze : selectedallies)
+						{
+							if (aze->getstop_skill())
+							{
+								if (input.getTouche(SDL_SCANCODE_S) == false)
+								{
+									aze->setstop_skill(false);
+									aze->setselectedskill(false);
+								}
+							}
+							if (aze->gethold_skill())
+							{
+								if (input.getTouche(SDL_SCANCODE_H) == false)
+								{
+									aze->sethold_skill(false);
+									aze->setselectedskill(false);
+								}
+							}
+						}
+						if (input.getTouche(SDL_SCANCODE_C))
+						{
+							for (auto &aze : selectedallies)
+							{
+								aze->setusedskill(0);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
+								aze->setselectedskill(true);
+							}
+							selectedskill = true;
+							selectedskill_mouse = true;
+						}
+						else if (input.getTouche(SDL_SCANCODE_S))
+						{
+							selectedskill = false;
+							for (auto &aze : selectedallies)
+							{
+								aze->setusedskill(1);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
 								if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
 								{
-									//if (aze->action_getlist().size() == 0)
-									//{
-									//	aze->setaction_over(true);
-									//}
 									aze->action_clearlist();
 									aze->setreset_action();
 									aze->mousexylist_clear();
 									aze->setaction_over(true);
-									//aze->setaction_over(true);
-									//aze->skills_bool_clear();
-									//aze->setskill_number(0);
-									//aze->setskill_over(true);
-									//aze->setnumber_of_skill_used(0);
-									//aze->setskill_reset(true);
 								}
-
-								aze->action_pushback(1);
-								//aze->setaction_to_do(1);
-								//aze->setmove(true);
-								mousexy[0] = input.MouseX() - CameraX;
-								mousexy[1] = input.MouseY() - CameraY;
-
-								//aze->get_mousexylist().push_back({ mousexy[0], mousexy[1] });
-								//aze->get_mousexylist().push_back({1,1 });
-								aze->mousexy_pushback(mousexy[0], mousexy[1]);
-								//aze->setaction_start(true);
-
-								//aze->setmousexy(mousexy);
+								aze->action_pushback(0);
+								aze->mousexy_pushback(0, 0);
+								aze->setselectedskill(true);
+								aze->setstop_skill(true);
 							}
 						}
-					}
-
-				}
-
-				//
-				//Relâchement du clic droit
-				//
-				if (input.MouseButton(SDL_BUTTON_RIGHT) == false)
-				{
-					rightclick = false;
-				}
-
-				//
-				//Deplacement et selection de toutes les units (final)
-				//
-				//for (auto &aze : units)
-				//{
-				//	if (aze->getmove())
-				//	{
-				//		aze->moveunit();
-				//	}
-				//	if (aze->getmoving())
-				//	{
-				//		aze->moveunit();
-				//	}
-				//}
-
-				//
-				//Actions des unités
-				//
-				for (auto &aze : units)
-				{
-					aze->action();
-					if (aze->getskill_go())
-					{
-						active_skills.push_back(Skills(gRenderer, aze, NULL, aze->getskill_to_go(), &CameraX, &CameraY, aze->getmousex(), aze->getmousey()));
-						aze->setskill_go(false);
-					}
-				}
-
-				//
-				//Mise a jour du hud et du vecteur d'unitées séléctionnées lorsque le click gauche est relaché
-				//
-				if (leftclick == false && selection == true)
-				{
-					//La préséléction se fait pendant la séléction avec clic gauche. Au relâchement on fait le test
-					if (allyselected)
-					{
-						for (auto &aze : neutralunits)
+						else if (input.getTouche(SDL_SCANCODE_H))
 						{
-							aze->setpre_select(false);
-						}
-						for (auto &aze : ennemyunits)
-						{
-							aze->setpre_select(false);
-						}
-					}
-
-					for (auto &aze : units)
-					{
-						if (aze->getpre_select())
-						{
-							aze->setselect(true);
-						}
-						else
-						{
-							if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
+							for (auto &aze : selectedallies)
 							{
-								aze->setselect(false);
+								aze->setusedskill(2);
+								if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
+								{
+									aze->action_clearlist();
+									aze->setreset_action();
+									aze->mousexylist_clear();
+									aze->setaction_over(true);
+								}
+								aze->action_pushback(2);
+								aze->mousexy_pushback(0, 0);
+								aze->setselectedskill(true);
+								aze->sethold_skill(true);
 							}
 						}
-					}
-
-					//Les unités séléctionnées sont placées dans le vecteur d'unités du hud
-					hud->hudunitsclear();
-					selectedallies.clear();
-					selection = false;
-					priorityunit_index = 0;
-					for (auto &aze : units)
-					{
-						if (aze->getselect())
+						else if (input.getTouche(SDL_SCANCODE_P))
 						{
-							hud->setunit(aze);
-							hud->addunit(aze);
-						}
-					}
-
-					//Si aucune unité n'est selectionée
-					if (hud->hudunitsempty()) 
-					{
-						hud->setunit(defaultunit);
-					}
-
-
-					//Remplissage du vecteur d'unités séléctionnées
-					for (auto &aze : allyunits)
-					{
-						if (aze->getselect())
-						{
-							selectedallies.push_back(aze);
-						}
-					}
-				}
-
-				//Si tab est relâché
-				if (input.getTouche(SDL_SCANCODE_TAB) == false)
-				{
-					touche_tab = false;
-				}
-
-				//Changement d'unité prioritaire avec TAB
-				if (selectedallies.size() > 0)
-				{
-					if (input.getTouche(SDL_SCANCODE_TAB) && touche_tab == false)
-					{
-						priorityunit->setselectedskill(false);
-						selectedskill = false;
-						selectedskill_mouse = false;
-						touche_tab = true;
-						priorityunit->setpriority(false);
-						if (priorityunit_index + 1 < selectedallies.size())
-						{
-							++priorityunit_index;
-						}
-						else
-						{
-							priorityunit_index = 0;
-						}
-					}
-				}
-				else
-				{
-					priorityunit = defaultunit;
-				}
-
-				//
-				//Gestion des skills
-				//
-				if (allyselected)
-				{
-					if (selectedallies.size() > 0)
-					{
-						priorityunit = selectedallies[priorityunit_index];
-						priorityunit->setpriority(true);
-					}
-					for (auto &aze : selectedallies)
-					{
-						if (aze->getstop_skill())
-						{
-							if (input.getTouche(SDL_SCANCODE_S) == false)
+							for (auto &aze : selectedallies)
 							{
-								aze->setstop_skill(false);
-								aze->setselectedskill(false);
+								aze->setusedskill(3);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
+								aze->setselectedskill(true);
 							}
+							selectedskill = true;
+							selectedskill_mouse = true;
 						}
-						if (aze->gethold_skill())
+						else if (input.getTouche(SDL_SCANCODE_A))
 						{
-							if (input.getTouche(SDL_SCANCODE_H) == false)
+							for (auto &aze : selectedallies)
 							{
-								aze->sethold_skill(false);
-								aze->setselectedskill(false);
+								aze->setusedskill(4);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
+								aze->setselectedskill(true);
 							}
+							selectedskill = true;
+							selectedskill_mouse = true;
 						}
-					}
-					if (input.getTouche(SDL_SCANCODE_C))
-					{
-						for (auto &aze : selectedallies)
+						else if (input.getTouche(SDL_SCANCODE_Q))
 						{
-							aze->setusedskill(0);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
-							aze->setselectedskill(true);
-						}
-						selectedskill = true;
-						selectedskill_mouse = true;
-					}
-					else if (input.getTouche(SDL_SCANCODE_S))
-					{
-						selectedskill = false;
-						for (auto &aze : selectedallies)
-						{
-							aze->setusedskill(1);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
-							if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
-							{
-								aze->action_clearlist();
-								aze->setreset_action();
-								aze->mousexylist_clear();
-								aze->setaction_over(true);
-							}
-							aze->action_pushback(0);
-							aze->mousexy_pushback(0, 0);
-							aze->setselectedskill(true);
-							aze->setstop_skill(true);
+							priorityunit->setusedskill(5);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
+							priorityunit->setselectedskill(true);
+							selectedskill = true;
+							selectedskill_mouse = true;
 						}
 					}
-					else if (input.getTouche(SDL_SCANCODE_H))
+
+
+
+					printf("%d", active_skills.size());
+
+
+
+					//Calculate and correct fps
+					float avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
+					if (avgFPS > 2000000)
 					{
-						for (auto &aze : selectedallies)
-						{
-							aze->setusedskill(2);
-							if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
-							{
-								aze->action_clearlist();
-								aze->setreset_action();
-								aze->mousexylist_clear();
-								aze->setaction_over(true);
-							}
-							aze->action_pushback(2);
-							aze->mousexy_pushback(0, 0);
-							aze->setselectedskill(true);
-							aze->sethold_skill(true);
-						}
+						avgFPS = 0;
 					}
-					else if (input.getTouche(SDL_SCANCODE_P))
+
+
+
+
+
+					/////////////////////////////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////////////////////////////////Affichage
+					/////////////////////////////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////////////////////////////////
+
+					//		//Clear screen
+					SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0xFF);
+					SDL_RenderClear(gRenderer);
+
+					//
+					//Je laisse ces deux là au cas où c'est plus opti mais a priori non.....hum...
+					//
+					/*for (i = 0; i < tiles.size(); i++)
 					{
-						for (auto &aze : selectedallies)
-						{
-							aze->setusedskill(3);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
-							aze->setselectedskill(true);
-						}
-						selectedskill = true;
-						selectedskill_mouse = true;
+					tiles[i].Draw();
+					printf("lol");
 					}
-					else if (input.getTouche(SDL_SCANCODE_A))
+					for (auto a = tiles.begin(); a != tiles.end(); a++)
 					{
-						for (auto &aze : selectedallies)
-						{
-							aze->setusedskill(4);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
-							aze->setselectedskill(true);
-						}
-						selectedskill = true;
-						selectedskill_mouse = true;
-					}
-					else if (input.getTouche(SDL_SCANCODE_Q))
+					Sprite->Draw();
+					}*/
+
+					//
+					//Dessiner la map
+					//
+					for (auto &tile : tiles) // access by reference to avoid copying
 					{
-						priorityunit->setusedskill(5);   // Pointe sur le vecteur de skill de l'unité, si on pointe trop loin crash du jeu					
-						priorityunit->setselectedskill(true);
-						selectedskill = true;
-						selectedskill_mouse = true;
+						tile->Draw();
 					}
-				}
 
-
-
-				printf("%d", active_skills.size());
-
-
-
-				//Calculate and correct fps
-				float avgFPS = countedFrames / (fpsTimer.getTicks() / 1000.f);
-				if (avgFPS > 2000000)
-				{
-					avgFPS = 0;
-				}
-
-				
-
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////Affichage
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-		//		//Clear screen
-				SDL_SetRenderDrawColor(gRenderer, 255, 255, 255, 0xFF);
-				SDL_RenderClear(gRenderer);
-
-				//
-				//Je laisse ces deux là au cas où c'est plus opti mais a priori non.....hum...
-				//
-				/*for (i = 0; i < tiles.size(); i++)
-				{
-				tiles[i].Draw();
-				printf("lol");
-				}
-				for (auto a = tiles.begin(); a != tiles.end(); a++)
-				{
-				Sprite->Draw();
-				}*/
-
-				//
-				//Dessiner la map
-				//
-				for (auto &tile : tiles) // access by reference to avoid copying
-				{
-					tile->Draw();
-				}
-
-				//
-				//Dessiner les unités
-				//
-				roger->getsprite()->Draw();
-
-				//bob->getsprite()->PlayAnimation(0, 2, 0, 100);
-				//bob->getsprite()->Draw();
-				bob->draw();
-				zergling->getsprite()->Draw();
-
-				/*
-				for (auto &aze : units) // access by reference to avoid copying
-				{
-				aze->getsprite()->Draw();
-				}
-				*/
-
-
-
-
-/////////////////////////Brouillon 3 du fogofwar
-/////////////////////////
-/////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-				//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
-				//SDL_RenderDrawRect(gRenderer, &map_rect);
-				//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 100);
-				//SDL_RenderFillRect(gRenderer, &map_rect);
-
-
-
-				////////////change the rendering target
-				//////////
-				//////////SDL_SetTextureBlendMode(auxtexture, SDL_BLENDMODE_BLEND);
-				//////////SDL_SetRenderTarget(gRenderer, auxtexture);
-				//////////
-				////////////render what we want
-				//////////roger->draw(); //render my class triangle e.g
-				//////////
-				//////////
-				////////////change the target back to the default and then render the aux
-				//////////
-				//////////SDL_SetRenderTarget(gRenderer, NULL); //NULL SETS TO DEFAULT
-				//////////bob->draw();
-				//////////SDL_DestroyTexture(auxtexture);
-
-
-
-
-				////////////////////////////////////////////////////////
-				//SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-				//
-				//sourceRect = { 0 + (int)CameraX, 0 + (int)CameraY, surface_fogofwar_remove->w, surface_fogofwar_remove->h };
-				//destRect = { 300 + (int)CameraX, 300 + (int)CameraY, surface_fogofwar_remove->w, surface_fogofwar_remove->h };
-				//
-				//	// Make sure our rects stays within bounds
-				//	if (destRect.x < 0)
-				//	{
-				//		sourceRect.x -= destRect.x; // remove the pixels outside of the surface
-				//		sourceRect.w -= sourceRect.x; // shrink to the surface, not to offset fog
-				//		destRect.x = 0;
-				//		destRect.w -= sourceRect.x; // shrink the width to stay within bounds
-				//	}
-				//	if (destRect.y < 0)
-				//	{
-				//		sourceRect.y -= destRect.y; // remove the pixels outside
-				//		sourceRect.h -= sourceRect.y; // shrink to the surface, not to offset fog
-				//		destRect.y = 0;
-				//		destRect.h -= sourceRect.y; // shrink the height to stay within bounds
-				//	}
-				//	
-				//	int xDistanceFromEdge = (destRect.x + destRect.w) - surface_fogofwar->w;
-				//	if (xDistanceFromEdge > 0) // we're busting
-				//	{
-				//		sourceRect.w -= xDistanceFromEdge;
-				//		destRect.w -= xDistanceFromEdge;
-				//	}
-				//	int yDistanceFromEdge = (destRect.y + destRect.h) - surface_fogofwar->h;
-				//	if (yDistanceFromEdge > 0) // we're busting
-				//	{
-				//		sourceRect.h -= yDistanceFromEdge;
-				//		destRect.h -= yDistanceFromEdge;
-				//	}
-				//
-				//	SDL_LockSurface(surface_fogofwar);
-				//
-				//	destPixels = (Uint32*)surface_fogofwar->pixels;
-				//	srcPixels = (Uint32*)surface_fogofwar_remove->pixels;
-				//
-				//
-				//	for (int y = 0; y < destRect.w; ++y)
-				//	{
-				//		for (int x = 0; x < destRect.h; ++x)
-				//		{
-				//			destPixel = destPixels + (y + destRect.y) * surface_fogofwar->w + destRect.x + x;
-				//			srcPixel = srcPixels + (y + sourceRect.y) * surface_fogofwar_remove->w + sourceRect.x + x;
-				//
-				//			destAlpha = (unsigned char*)destPixel + 3; // fetch alpha channel
-				//			srcAlpha = (unsigned char*)srcPixel + 3; // fetch alpha channel
-				//			if (keepFogRemoved == true && *srcAlpha > 0)
-				//			{
-				//				continue; // skip this pixel
-				//			}
-				//
-				//			*destAlpha = *srcAlpha;
-				//		}
-				//	}
-				//
-				//	SDL_UnlockSurface(surface_fogofwar);
-
-
-				//SDL_LockSurface(surface_fogofwar);
-				//
-				//for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY()+ 200; ++y)
-				//{
-				//	for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX()+200; ++x)
-				//	{
-				//		if (x >= 0 && y >= 0)
-				//		{
-				//			p = (Uint8 *)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x * surface_fogofwar->format->BytesPerPixel;
-				//			//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
-				//			*(Uint32 *)p = fogofwar_pixel2;
-				//		}
-				//	}
-				//}
-				//
-				//SDL_UnlockSurface(surface_fogofwar);
-
-
-
-				/////////////////////////////////////////////////////////////////
-				//////////////////////////////////////////////////////////////////////////
-				/////////////////////////////////////////////////////////////////////
-
-
-
-			//	SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-
-
-			//	rect_fogofwar.x = 0 + (int)CameraX;
-			//	rect_fogofwar.y = 0 + (int)CameraY;
-				//SDL_LockSurface(surface_fogofwar);
-
-			//	for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY() + 200; ++y)
-			//	{
-			//		for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX() + 200; ++x)
-			//		{
-			//			if (x >= 0 && y >= 0)
-			//			{
-			//				p = (Uint8 *)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x * surface_fogofwar->format->BytesPerPixel;
-			//				//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
-			//				*(Uint32 *)p = fogofwar_pixel2;
-			//			}
-			//		}
-			//	}
-
-				//SDL_UnlockSurface(surface_fogofwar);
-
-				//texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
-
-				//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
-				//			
-				//SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
-//				SDL_LockTexture(texture_fogofwar, nullptr, static_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
-//				//SDL_LockTexture(texture_fogofwar, NULL,&fogofwar_pixels, &fogofwar_pitch);
-//				for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY() + 500; ++y)
-//				{
-//					++loly;
-//					for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX() + 500; ++x)
-//					{
-//						p = (Uint8 *)fogofwar_pixels + y * fogofwar_pitch + x * surface_fogofwar->format->BytesPerPixel;
-//						//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
-//						
-//						//on test si le pixel est dans les limites de la texture, sinon crash (a part pour le x <1360 là on boucle sur la texture)
-//						if (x >= 0 && y >= 0 && x < 1360 && y < 1520)	//1360 et 1520 représentent la taille de la texture fogofwar donc de la map
-//						{
-//							//destAlpha = (unsigned char*)p + 3; // fetch alpha channel
-//
-//							//destAlpha = srcAlpha;
-//							//*(Uint32 *)p = fogofwar_remove_pixels[lolx];
-//							*(Uint32 *)p = transparent;
-//						}
-//						++lolx;
-//						
-//					}
-//				}
-//				SDL_UnlockTexture(texture_fogofwar);
-//				
-//				lolx = 0;
-//				loly = 0;
-//
-
-
-
-
-
-				//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
-				//////////////////////////////
-				//////////////////////////////Optimisation de ouf a faire en dessous la boucle for fait 2millions de tours pour tous les pixels de la map
-				//////////////////////////////alors qu'il suffirait de modifier ceux autour des persos
-				//////////////////////////////et/ou même uniquement ceux affichés à l'écran
-				///////////////////////////////
-				///////////////EDIT : le memcpy fonctionne et copie tous les pixels de la surface
-				///////////////sur la texture, environ 2millions l'opti est à faire là
-				///////////////
-				///////////////Deux façons d'opti,1 ne changer que les pixels qu'on veut
-				///////////////avec ou sans memcpy,2 ne faire les changements qu'a l'écran
-				///////////////3 les deux.
-
-		//			SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&pixels), &pitch);
-		//			SDL_memcpy(pixels, surface_fogofwar->pixels, surface_fogofwar->pitch*surface_fogofwar->h);
-		//			//pixels32 = (Uint32*)pixels;	
-		//			//pixelCount = (pitch / 4) * surface_fogofwar->h;
-		//			//for (int i = 0; i < 50000 ; i++)
-		//			//{				
-		//			//	pixels32[i] = fogofwar_pixel2;	
-		//			//}		
-		//			SDL_UnlockTexture(texture_fogofwar);
-		
-				///////////////////////////
-				///////////////////////////Updatetexture oblige a changer toute la texture
-				///////////////////////////
-		//		if (CameraX > 0 && CameraY > 0)
-		//		{
-		//		screenRect.x += CameraX;
-		//		screenRect.y = CameraY;
-		//		}
-		//		SDL_UpdateTexture(texture_fogofwar, NULL, surface_fogofwar->pixels, surface_fogofwar->pitch);
-		//		////SDL_UnlockTexture(texture_fogofwar);
-		//		//
-		//		SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
-				////SDL_DestroyTexture(texture_fogofwar);
-			
-
-///////////////////////////////////////
-///////////////////////////////////////DU LOURD
-///////////////////////////////////////DU LOURD
-///////////////////////////////////////
-	//			for (row = 0; row < MOOSEPIC_H; ++row) {
-	//				dst = (Uint32*)((Uint8*)pixels + row * pitch);
-	//				for (col = 0; col < MOOSEPIC_W; ++col) {
-	//					color = &MooseColors[*src++];
-	//					*dst++ = (0xFF000000 | (color->r << 16) | (color->g << 8) | color->b);
-	//					
-	//				}
-	//				
-	//			}
-/////////////////////////////////////////
-/////////////////////////////////////////
-/////////////////////////////////////////
-/////////////////////////////////////////
-/////////////////////////////////////////
-
-
-
-
-/////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////
-
-				////void *pixels;
-				////int pitch;
-				//
-				//
-				///* Process events */
-				//
-				///* Modify the pixels of pictureSurface */
-				//
-				///*
-				//* Blit 8-bit palette surface onto the window surface that's
-				//* closer to the texture's format
-				//*/
-				////SDL_BlitSurface(pictureSurface, NULL, windowSurface, NULL);
-				//
-				///* Modify the texture's pixels */
-				//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
-				//SDL_ConvertPixels(surface_fogofwar->w, surface_fogofwar->h,
-				//	surface_fogofwar->format->format,
-				//	surface_fogofwar->pixels, surface_fogofwar->pitch,
-				//	SDL_PIXELFORMAT_ARGB8888,
-				//	pixels, pitch);
-				//SDL_UnlockTexture(texture_fogofwar);
-				//
-				///* Make the modified texture visible by rendering it */
-				//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
-
-
-
-
-
-
-
-
-
-
-
-				//SDL_LockTexture(texture_fogofwar, &surface_fogofwar->clip_rect, &pixels, &pitch);
-				//
-				//memcpy(pixels, surface_fogofwar->pixels, (surface_fogofwar->pitch * surface_fogofwar->h));
-				//
-				//int width = surface_fogofwar->w;
-				//int height = surface_fogofwar->h;
-				//
-				//Uint32* pixels32 = (Uint32*)pixels;
-				//int     pixelCount = (pitch / 4) * height;
-				//
-				//Uint32 colorKey = SDL_MapRGBA(surface_fogofwar->format, 0xFF, 0x00, 100, 50);
-				//Uint32 transparent = SDL_MapRGBA(surface_fogofwar->format, 0, 0x00, 0xFF, 0x00);
-				//
-				//
-				//for (int i = 0; i < pixelCount; i++) {
-				//	
-				//		pixels32[i] = transparent;
-				//	
-				//}
-				//
-				//SDL_UnlockTexture(texture_fogofwar);
-				//
-				////SDL_FreeSurface(imageFomatted);
-				////SDL_FreeSurface(surface_fogofwar);
-				//
-				//pixels = NULL;
-				//pitch = 0;
-				//width = 0;
-				//height = 0;
-				//
-				//
-				//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &map_rect);
+					//
+					//Dessiner les unités
+					//
+					roger->getsprite()->Draw();
+
+					//bob->getsprite()->PlayAnimation(0, 2, 0, 100);
+					//bob->getsprite()->Draw();
+					bob->draw();
+					zergling->getsprite()->Draw();
+
+					/*
+					for (auto &aze : units) // access by reference to avoid copying
+					{
+					aze->getsprite()->Draw();
+					}
+					*/
+
+
+
+
+					/////////////////////////Brouillon 3 du fogofwar
+					/////////////////////////
+					/////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+					//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
+					//SDL_RenderDrawRect(gRenderer, &map_rect);
+					//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 100);
+					//SDL_RenderFillRect(gRenderer, &map_rect);
+
+
+
+					////////////change the rendering target
+					//////////
+					//////////SDL_SetTextureBlendMode(auxtexture, SDL_BLENDMODE_BLEND);
+					//////////SDL_SetRenderTarget(gRenderer, auxtexture);
+					//////////
+					////////////render what we want
+					//////////roger->draw(); //render my class triangle e.g
+					//////////
+					//////////
+					////////////change the target back to the default and then render the aux
+					//////////
+					//////////SDL_SetRenderTarget(gRenderer, NULL); //NULL SETS TO DEFAULT
+					//////////bob->draw();
+					//////////SDL_DestroyTexture(auxtexture);
+
+
+
+
+					////////////////////////////////////////////////////////
+					//SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
+					//
+					//sourceRect = { 0 + (int)CameraX, 0 + (int)CameraY, surface_fogofwar_remove->w, surface_fogofwar_remove->h };
+					//destRect = { 300 + (int)CameraX, 300 + (int)CameraY, surface_fogofwar_remove->w, surface_fogofwar_remove->h };
+					//
+					//	// Make sure our rects stays within bounds
+					//	if (destRect.x < 0)
+					//	{
+					//		sourceRect.x -= destRect.x; // remove the pixels outside of the surface
+					//		sourceRect.w -= sourceRect.x; // shrink to the surface, not to offset fog
+					//		destRect.x = 0;
+					//		destRect.w -= sourceRect.x; // shrink the width to stay within bounds
+					//	}
+					//	if (destRect.y < 0)
+					//	{
+					//		sourceRect.y -= destRect.y; // remove the pixels outside
+					//		sourceRect.h -= sourceRect.y; // shrink to the surface, not to offset fog
+					//		destRect.y = 0;
+					//		destRect.h -= sourceRect.y; // shrink the height to stay within bounds
+					//	}
+					//	
+					//	int xDistanceFromEdge = (destRect.x + destRect.w) - surface_fogofwar->w;
+					//	if (xDistanceFromEdge > 0) // we're busting
+					//	{
+					//		sourceRect.w -= xDistanceFromEdge;
+					//		destRect.w -= xDistanceFromEdge;
+					//	}
+					//	int yDistanceFromEdge = (destRect.y + destRect.h) - surface_fogofwar->h;
+					//	if (yDistanceFromEdge > 0) // we're busting
+					//	{
+					//		sourceRect.h -= yDistanceFromEdge;
+					//		destRect.h -= yDistanceFromEdge;
+					//	}
+					//
+					//	SDL_LockSurface(surface_fogofwar);
+					//
+					//	destPixels = (Uint32*)surface_fogofwar->pixels;
+					//	srcPixels = (Uint32*)surface_fogofwar_remove->pixels;
+					//
+					//
+					//	for (int y = 0; y < destRect.w; ++y)
+					//	{
+					//		for (int x = 0; x < destRect.h; ++x)
+					//		{
+					//			destPixel = destPixels + (y + destRect.y) * surface_fogofwar->w + destRect.x + x;
+					//			srcPixel = srcPixels + (y + sourceRect.y) * surface_fogofwar_remove->w + sourceRect.x + x;
+					//
+					//			destAlpha = (unsigned char*)destPixel + 3; // fetch alpha channel
+					//			srcAlpha = (unsigned char*)srcPixel + 3; // fetch alpha channel
+					//			if (keepFogRemoved == true && *srcAlpha > 0)
+					//			{
+					//				continue; // skip this pixel
+					//			}
+					//
+					//			*destAlpha = *srcAlpha;
+					//		}
+					//	}
+					//
+					//	SDL_UnlockSurface(surface_fogofwar);
+
+
+					//SDL_LockSurface(surface_fogofwar);
+					//
+					//for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY()+ 200; ++y)
+					//{
+					//	for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX()+200; ++x)
+					//	{
+					//		if (x >= 0 && y >= 0)
+					//		{
+					//			p = (Uint8 *)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x * surface_fogofwar->format->BytesPerPixel;
+					//			//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
+					//			*(Uint32 *)p = fogofwar_pixel2;
+					//		}
+					//	}
+					//}
+					//
+					//SDL_UnlockSurface(surface_fogofwar);
+
+
+
+					/////////////////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////
+
+
+
+					//	SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
+
+
+					//	rect_fogofwar.x = 0 + (int)CameraX;
+					//	rect_fogofwar.y = 0 + (int)CameraY;
+					//SDL_LockSurface(surface_fogofwar);
+
+					//	for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY() + 200; ++y)
+					//	{
+					//		for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX() + 200; ++x)
+					//		{
+					//			if (x >= 0 && y >= 0)
+					//			{
+					//				p = (Uint8 *)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x * surface_fogofwar->format->BytesPerPixel;
+					//				//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
+					//				*(Uint32 *)p = fogofwar_pixel2;
+					//			}
+					//		}
+					//	}
+
+					//SDL_UnlockSurface(surface_fogofwar);
+
+					//texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
+
+					//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
+					//			
+					//SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
+					//				SDL_LockTexture(texture_fogofwar, nullptr, static_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
+					//				//SDL_LockTexture(texture_fogofwar, NULL,&fogofwar_pixels, &fogofwar_pitch);
+					//				for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY() + 500; ++y)
+					//				{
+					//					++loly;
+					//					for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX() + 500; ++x)
+					//					{
+					//						p = (Uint8 *)fogofwar_pixels + y * fogofwar_pitch + x * surface_fogofwar->format->BytesPerPixel;
+					//						//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
+					//						
+					//						//on test si le pixel est dans les limites de la texture, sinon crash (a part pour le x <1360 là on boucle sur la texture)
+					//						if (x >= 0 && y >= 0 && x < 1360 && y < 1520)	//1360 et 1520 représentent la taille de la texture fogofwar donc de la map
+					//						{
+					//							//destAlpha = (unsigned char*)p + 3; // fetch alpha channel
+					//
+					//							//destAlpha = srcAlpha;
+					//							//*(Uint32 *)p = fogofwar_remove_pixels[lolx];
+					//							*(Uint32 *)p = transparent;
+					//						}
+					//						++lolx;
+					//						
+					//					}
+					//				}
+					//				SDL_UnlockTexture(texture_fogofwar);
+					//				
+					//				lolx = 0;
+					//				loly = 0;
+					//
+
+
+
+
+
+					//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
+					//////////////////////////////
+					//////////////////////////////Optimisation de ouf a faire en dessous la boucle for fait 2millions de tours pour tous les pixels de la map
+					//////////////////////////////alors qu'il suffirait de modifier ceux autour des persos
+					//////////////////////////////et/ou même uniquement ceux affichés à l'écran
+					///////////////////////////////
+					///////////////EDIT : le memcpy fonctionne et copie tous les pixels de la surface
+					///////////////sur la texture, environ 2millions l'opti est à faire là
+					///////////////
+					///////////////Deux façons d'opti,1 ne changer que les pixels qu'on veut
+					///////////////avec ou sans memcpy,2 ne faire les changements qu'a l'écran
+					///////////////3 les deux.
+
+					//			SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&pixels), &pitch);
+					//			SDL_memcpy(pixels, surface_fogofwar->pixels, surface_fogofwar->pitch*surface_fogofwar->h);
+					//			//pixels32 = (Uint32*)pixels;	
+					//			//pixelCount = (pitch / 4) * surface_fogofwar->h;
+					//			//for (int i = 0; i < 50000 ; i++)
+					//			//{				
+					//			//	pixels32[i] = fogofwar_pixel2;	
+					//			//}		
+					//			SDL_UnlockTexture(texture_fogofwar);
+
+					///////////////////////////
+					///////////////////////////Updatetexture oblige a changer toute la texture
+					///////////////////////////
+					//		if (CameraX > 0 && CameraY > 0)
+					//		{
+					//		screenRect.x += CameraX;
+					//		screenRect.y = CameraY;
+					//		}
+					//		SDL_UpdateTexture(texture_fogofwar, NULL, surface_fogofwar->pixels, surface_fogofwar->pitch);
+					//		////SDL_UnlockTexture(texture_fogofwar);
+					//		//
+					//		SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
+					////SDL_DestroyTexture(texture_fogofwar);
+
+
+					///////////////////////////////////////
+					///////////////////////////////////////DU LOURD
+					///////////////////////////////////////DU LOURD
+					///////////////////////////////////////
+					//			for (row = 0; row < MOOSEPIC_H; ++row) {
+					//				dst = (Uint32*)((Uint8*)pixels + row * pitch);
+					//				for (col = 0; col < MOOSEPIC_W; ++col) {
+					//					color = &MooseColors[*src++];
+					//					*dst++ = (0xFF000000 | (color->r << 16) | (color->g << 8) | color->b);
+					//					
+					//				}
+					//				
+					//			}
+					/////////////////////////////////////////
+					/////////////////////////////////////////
+					/////////////////////////////////////////
+					/////////////////////////////////////////
+					/////////////////////////////////////////
+
+
+
+
+					/////////////////////////////////////////////////////////////////
+					//////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////////////////////////////////
+
+					////void *pixels;
+					////int pitch;
+					//
+					//
+					///* Process events */
+					//
+					///* Modify the pixels of pictureSurface */
+					//
+					///*
+					//* Blit 8-bit palette surface onto the window surface that's
+					//* closer to the texture's format
+					//*/
+					////SDL_BlitSurface(pictureSurface, NULL, windowSurface, NULL);
+					//
+					///* Modify the texture's pixels */
+					//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
+					//SDL_ConvertPixels(surface_fogofwar->w, surface_fogofwar->h,
+					//	surface_fogofwar->format->format,
+					//	surface_fogofwar->pixels, surface_fogofwar->pitch,
+					//	SDL_PIXELFORMAT_ARGB8888,
+					//	pixels, pitch);
+					//SDL_UnlockTexture(texture_fogofwar);
+					//
+					///* Make the modified texture visible by rendering it */
+					//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
+
+
+
+
+
+
+
+
+
+
+
+					//SDL_LockTexture(texture_fogofwar, &surface_fogofwar->clip_rect, &pixels, &pitch);
+					//
+					//memcpy(pixels, surface_fogofwar->pixels, (surface_fogofwar->pitch * surface_fogofwar->h));
+					//
+					//int width = surface_fogofwar->w;
+					//int height = surface_fogofwar->h;
+					//
+					//Uint32* pixels32 = (Uint32*)pixels;
+					//int     pixelCount = (pitch / 4) * height;
+					//
+					//Uint32 colorKey = SDL_MapRGBA(surface_fogofwar->format, 0xFF, 0x00, 100, 50);
+					//Uint32 transparent = SDL_MapRGBA(surface_fogofwar->format, 0, 0x00, 0xFF, 0x00);
+					//
+					//
+					//for (int i = 0; i < pixelCount; i++) {
+					//	
+					//		pixels32[i] = transparent;
+					//	
+					//}
+					//
+					//SDL_UnlockTexture(texture_fogofwar);
+					//
+					////SDL_FreeSurface(imageFomatted);
+					////SDL_FreeSurface(surface_fogofwar);
+					//
+					//pixels = NULL;
+					//pitch = 0;
+					//width = 0;
+					//height = 0;
+					//
+					//
+					//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &map_rect);
 
 
 
@@ -2321,7 +2408,6 @@ int main(int argc, char* args[])
 					//mPixels = NULL;
 					//
 					//SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
-		 
 
 
 
@@ -2336,459 +2422,463 @@ int main(int argc, char* args[])
 
 
 
-				
-				////////////////////////////////////////////////////////////////
 
 
-				//SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-				//
-				//rect_fogofwar.x = -200 + CameraX;
-				//rect_fogofwar.y = -200 + CameraY;
-				//rect_fogofwar.w = carte->getsizex()+400;
-				//rect_fogofwar.h = carte->getsizey()+400;
-				//
-				//texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
-				//
-				//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
-				////SDL_DestroyTexture(texture_fogofwar);
-				//
-				//surface_fogofwar->
-				//
-				//
-//////////////////////////////////////////////////
-				////Get pixel data
-				//Uint32* pixels = (Uint32*)texture_fogofwar->getPixels();
-				//int pixelCount = (gFooTexture.getPitch() / 4) * gFooTexture.getHeight();
-				//
-				////Map colors
-				//Uint32 colorKey = SDL_MapRGB(SDL_GetWindowSurface(gWindow)->format, 0, 0xFF, 0xFF);
-				//Uint32 transparent = SDL_MapRGBA(SDL_GetWindowSurface(gWindow)->format, 0xFF, 0xFF, 0xFF, 0x00);
-				//
-				////Color key pixels
-				//for (int i = 0; i < pixelCount; ++i)
-				//{
-				//	if (pixels[i] == colorKey)
-				//	{
-				//		pixels[i] = transparent;
-				//	}
-				//}
-				//
-				////Unlock texture
-				//gFooTexture.unlockTexture();
-				//
-				//
-//////////////////////////////////////////////////
-				//
-				//
-				////Lock texture for manipulation
-				//SDL_LockTexture(texture_fogofwar, NULL, , &mPitch);
-				//
-				////Copy loaded/formatted surface pixels
-				//memcpy(mPixels, formattedSurface->pixels, formattedSurface->pitch * formattedSurface->h);
-				//
-				////Unlock texture to update
-				//SDL_UnlockTexture(newTexture);
-				//mPixels = NULL;
-				//
-				////Get image dimensions
-				//mWidth = formattedSurface->w;
-				//mHeight = formattedSurface->h;
+					////////////////////////////////////////////////////////////////
 
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////
-/////////////////////////////////////////
-/////////////////////////////////////////Fin du brouillon 3 du fogofwar
+					//SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
+					//
+					//rect_fogofwar.x = -200 + CameraX;
+					//rect_fogofwar.y = -200 + CameraY;
+					//rect_fogofwar.w = carte->getsizex()+400;
+					//rect_fogofwar.h = carte->getsizey()+400;
+					//
+					//texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
+					//
+					//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
+					////SDL_DestroyTexture(texture_fogofwar);
+					//
+					//surface_fogofwar->
+					//
+					//
+					//////////////////////////////////////////////////
+					////Get pixel data
+					//Uint32* pixels = (Uint32*)texture_fogofwar->getPixels();
+					//int pixelCount = (gFooTexture.getPitch() / 4) * gFooTexture.getHeight();
+					//
+					////Map colors
+					//Uint32 colorKey = SDL_MapRGB(SDL_GetWindowSurface(gWindow)->format, 0, 0xFF, 0xFF);
+					//Uint32 transparent = SDL_MapRGBA(SDL_GetWindowSurface(gWindow)->format, 0xFF, 0xFF, 0xFF, 0x00);
+					//
+					////Color key pixels
+					//for (int i = 0; i < pixelCount; ++i)
+					//{
+					//	if (pixels[i] == colorKey)
+					//	{
+					//		pixels[i] = transparent;
+					//	}
+					//}
+					//
+					////Unlock texture
+					//gFooTexture.unlockTexture();
+					//
+					//
+					//////////////////////////////////////////////////
+					//
+					//
+					////Lock texture for manipulation
+					//SDL_LockTexture(texture_fogofwar, NULL, , &mPitch);
+					//
+					////Copy loaded/formatted surface pixels
+					//memcpy(mPixels, formattedSurface->pixels, formattedSurface->pitch * formattedSurface->h);
+					//
+					////Unlock texture to update
+					//SDL_UnlockTexture(newTexture);
+					//mPixels = NULL;
+					//
+					////Get image dimensions
+					//mWidth = formattedSurface->w;
+					//mHeight = formattedSurface->h;
 
 
 
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					/////////////////////////////////////////
+					/////////////////////////////////////////
+					/////////////////////////////////////////Fin du brouillon 3 du fogofwar
 
-				//
-				//Dessiner le chemin des unités
-				//
-				for (auto &ally : allyunits)
-				{
-					int i = 0;
-					if (ally->getselect())
+
+
+
+					//
+					//Dessiner le chemin des unités
+					//
+					for (auto &ally : allyunits)
 					{
-						if (ally->action_size() > 0)
+						int i = 0;
+						if (ally->getselect())
 						{
-							if (ally->getcurrent_action() == 1)
+							if (ally->action_size() > 0)
 							{
-								destination_circle->SetX(ally->getmousex() - destination_circle->GetWidth()/2);
-								destination_circle->SetY(ally->getmousey() - destination_circle->GetHeight() / 2);
-								destination_circle->Draw();
-							}
-
-							for (auto &action : ally->action_getlist())
-							{
-								if (action == 1)
+								if (ally->getcurrent_action() == 1)
 								{
-									destination_circle->SetX(ally->mousex_at(i) - destination_circle->GetWidth() / 2);
-									destination_circle->SetY(ally->mousey_at(i) - destination_circle->GetHeight() / 2);
+									destination_circle->SetX(ally->getmousex() - destination_circle->GetWidth() / 2);
+									destination_circle->SetY(ally->getmousey() - destination_circle->GetHeight() / 2);
 									destination_circle->Draw();
 								}
-								else if (action >= 5)
+
+								for (auto &action : ally->action_getlist())
 								{
-									destination_circle_skills->SetX(ally->mousex_at(i) - destination_circle_skills->GetWidth() / 2);
-									destination_circle_skills->SetY(ally->mousey_at(i) - destination_circle->GetHeight() / 2);
-									destination_circle_skills->Draw();
+									if (action == 1)
+									{
+										destination_circle->SetX(ally->mousex_at(i) - destination_circle->GetWidth() / 2);
+										destination_circle->SetY(ally->mousey_at(i) - destination_circle->GetHeight() / 2);
+										destination_circle->Draw();
+									}
+									else if (action >= 5)
+									{
+										destination_circle_skills->SetX(ally->mousex_at(i) - destination_circle_skills->GetWidth() / 2);
+										destination_circle_skills->SetY(ally->mousey_at(i) - destination_circle->GetHeight() / 2);
+										destination_circle_skills->Draw();
+									}
+									++i;
 								}
+							}
+						}
+
+					}
+					destination_circle->PlayAnimation(0, 7, 0, 6, NULL);
+					destination_circle_skills->PlayAnimation(0, 7, 0, 6, NULL);
+
+					for (auto &aze : units) // access by reference to avoid copying
+					{
+						if (aze->getselect() || aze->getpre_select())
+						{
+							aze->drawlife(gRenderer, CameraX, CameraY);
+							////////if (aze->getselectedskill())
+							////////{
+							////////	//dessiner le pré-skill
+							////////}
+
+						}
+					}
+
+					//
+					//Gestion et dessins des skills
+					//
+					if (active_skills.size() > 0)
+					{
+						for (auto &aze : active_skills)
+						{
+							aze.use_skill();
+							//aze.hand_grenade();
+							//aze->use_skill();
+							/*
+							if (aze.getfinish_skill())
+							{
+							aze.~Skills();
+							}
+							*/
+						}
+						//for (auto &aze : allyunits)
+						//{
+						//	aze->setskill_reset(false);
+						//}
+						//skill_no_reset = false;
+
+						//
+						//Destruction des skills
+						//
+
+						auto i = std::begin(active_skills);
+
+						while (i != std::end(active_skills))
+						{
+							// do some stuff.
+							if (i->getfinish_skill())
+							{
+
+								//i->gethand_grenade_sprite()->~Sprite();
+								i->~Skills();
+								i = active_skills.erase(i);
+							}
+							else
+							{
 								++i;
 							}
 						}
-					}
-						
-				}
-				destination_circle->PlayAnimation(0, 7, 0, 6,NULL);
-				destination_circle_skills->PlayAnimation(0, 7, 0, 6,NULL);
 
-				for (auto &aze : units) // access by reference to avoid copying
-				{
-					if (aze->getselect() || aze->getpre_select())
-					{
-						aze->drawlife(gRenderer, CameraX, CameraY);
-						////////if (aze->getselectedskill())
-						////////{
-						////////	//dessiner le pré-skill
-						////////}
 
-					}
-				}
+						//		for (auto &aze : active_skills) // access by reference to avoid copying
+						//		{
+						//			if (aze->getfinish_skill())
+						//			{
+						//				//i->gethand_grenade_sprite()->~Sprite();
+						//				aze->~Skills();
+						//				//aze = active_skills.erase(aze);
+						//			}
+						//		}
 
-				//
-				//Gestion et dessins des skills
-				//
-				if (active_skills.size() > 0)
-				{
-					for (auto &aze : active_skills)
-					{
-						aze.use_skill();
-						//aze.hand_grenade();
-						//aze->use_skill();
+
 						/*
-						if (aze.getfinish_skill())
+						std::vector<Skills*>::iterator deleteIterator = active_skills.begin();         //iterator??
+						while (deleteIterator != active_skills.end())
 						{
-						aze.~Skills();
+						if (deleteIterator->geth )
+						deleteIterator = active_skills.erase(deleteIterator);
+						}*/
+
+						/*
+						//printf("%d", active_skills.size());
+						for (auto &aze : active_skills)
+						{
+						if (aze->getfinish_skill())
+						{
+						aze->gethand_grenade_sprite()->~Sprite();
+						aze->~Skills();
+						i = active_skills.erase(i);
+						if (i < active_skills.size())
+						{
+						++i;
+						}
+						}
 						}
 						*/
+						//Maybe opti
+						/*
+						active_skills.erase(std::remove_if (active_skills.begin(),active_skills.end(),[](Skills element)->bool
+						{
+						// Do "some stuff", then return true if element should be removed.
+						return true;
+						}
+						),
+						active_skills.end()
+						);
+						*/
 					}
-					//for (auto &aze : allyunits)
+
+					//Dessiner le carré de sélection
+					if (drawselect)
+					{
+						SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 255);
+						SDL_RenderDrawRect(gRenderer, &mouserect);
+						SDL_SetRenderDrawColor(gRenderer, 0, 255, 100, 50);
+						SDL_RenderFillRect(gRenderer, &mouserect);
+						drawselect = false;
+					}
+
+					//Dessiner le Hud
+					hud->gethudstyle()->Draw();
+					hud->drawtext();
+					hud->getminimap()->Draw();
+					hud->drawminimap(units);
+					hud->drawskills(priorityunit);
+
+					//if (selection)
 					//{
-					//	aze->setskill_reset(false);
+					//	hud_noselect = true;
 					//}
-					//skill_no_reset = false;
+					if (allyselected && hud_noselect == false)
+					{
+						skills_mousexy[0] = input.MouseX();
+						skills_mousexy[1] = input.MouseY();
+						if (selection == false)
+						{
+							if (hud->skill_mouse_actions(priorityunit, skills_mousexy[0], skills_mousexy[1], leftclick, leftclick_release, input.getTouche(SDL_SCANCODE_LSHIFT)))
+							{
+								selectedskill = true;
+								selectedskill_mouse = true;
+							}
+						}
+					}
+					//hud_noselect = false;
+
+					//Dessiner la souris
+
+					if (selectedskill)
+					{
+						mouse_sprite_skill->SetX(input.MouseX() - 15);
+						mouse_sprite_skill->SetY(input.MouseY() - 15);
+						mouse_sprite_skill->Draw();
+					}
+					else
+					{
+						mouse_sprite->SetX(input.MouseX() - 6);
+						mouse_sprite->SetY(input.MouseY());
+						mouse_sprite->Draw();
+					}
+
+					////////////int centrex = SCREEN_WIDTH / 2;
+					////////////int centrey = SCREEN_HEIGHT / 2;
+					////////////
+					////////////int rayon = 10;
+					////////////
+					////////////for (int j = rayon; j < (rayon + 5); ++j)
+					////////////{
+					////////////	for (int i = 0; i < 720; ++i)
+					////////////	{
+					////////////		int x;
+					////////////		int y;
+					////////////
+					////////////		x = centrex + j * cos(i/2);
+					////////////		y = centrey + j * sin(i/2);
+					////////////		SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 0xFF);
+					////////////		SDL_RenderDrawPoint(gRenderer, x, y);
+					////////////
+					////////////	}
+					////////////}
+					////////////
+					////////////rayon = rayon + 5;
+					////////////int trans[3] = { 0xF0, 0x0F, 0 };
+					////////////
+					////////////for (int j = 0; j < 3; ++j)
+					////////////{
+					////////////	for (int i = 0; i < 720; ++i)
+					////////////	{
+					////////////		int x;
+					////////////		int y;
+					////////////
+					////////////		x = centrex + (rayon + j) * cos(i / 2);
+					////////////		y = centrey + (rayon + j) * sin(i / 2);
+					////////////		SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, trans[j]);
+					////////////		SDL_RenderDrawPoint(gRenderer, x, y);
+					////////////
+					////////////	}
+					////////////}
+					////////////
+					////////////float xpers = 15, ypers = 15;
+					////////////float exploX = 10, exploxY = 10;
+					////////////
+					////////////float norma = sqrt((exploX - xpers)*(exploX - xpers) + (exploxY - ypers)*(exploxY - ypers));
+					////////////printf("Norm = %f", norma);
+					////////////
+					////////////rayon = 6;
+					////////////
+					////////////if (norma > rayon)
+					////////////{
+					////////////	std::cout << "FERME TA GUELE JE SUIS PAS MORT" << std::endl;
+					////////////}
+					////////////else
+					////////////{
+					////////////	std::cout << "PETIT BATARD" << std::endl;
+					////////////}
+
+
+					//Set text to be rendered
+					timeText.str("");
+					timeText << "Average Frames Per Second (With Cap) " << avgFPS;
+
+					//Render text
+					if (!gFPSTextTexture.loadFromRenderedText(gRenderer, fpscount, timeText.str().c_str(), textColor))
+					{
+						printf("Unable to render FPS texture!\n");
+					}
+
+
+					//Render textures
+					gFPSTextTexture.render(gRenderer, (SCREEN_WIDTH - gFPSTextTexture.getWidth()) / 2, (SCREEN_HEIGHT - gFPSTextTexture.getHeight()) / 16);
+
+
+					//			//Opengl test
+					//			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+					//
+					//			//glEnable(GL_TEXTURE_2D);
+					//			//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+					//		//	modelview = gluLookAt(vec3(0, 0, 2), vec3(0, 0, 0), vec3(0, 1, 0));
+					//
+					//			//modelview =( glm::mat4)(glm::vec4(0, 0, 2, 0), glm::vec4(0, 0, 0, 0), glm::vec4(0, 1, 0, 0));
+					//
+					//		//	modelview = { glm::vec4(0, 0, 2, 0), glm::vec4(0, 0, 0, 0), glm::vec4(0, 1, 0, 0) };
+					//		//
+					//	//		modelview  = glm::mat3{
+					//	//			glm::vec3(0, 0, 0),
+					//	//			glm::vec3(0, 0, 0),
+					//	//			glm::vec3(0, 0, 0)
+					//	//		};
+					//   
+					//
+					//	//	// Activation du shader
+					//	//	glUseProgram(shaderBasique.getProgramID());
+					//	//
+					//	//	// Envoi des vertices
+					//	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+					//	//	glEnableVertexAttribArray(0);
+					//	//
+					//	//	// Envoi des coordonnées de texture
+					//	//	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, coordTexture);
+					//	//	glEnableVertexAttribArray(2);
+					//	//	
+					//	//
+					//	//	// Envoi des matrices
+					//	//	glUniformMatrix4fv(glGetUniformLocation(shaderBasique.getProgramID(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+					//	//	glUniformMatrix4fv(glGetUniformLocation(shaderBasique.getProgramID(), "modelview"), 1, GL_FALSE, glm::value_ptr(modelview));
+					//
+					//			//// On remplie puis on active le tableau Vertex Attrib 0
+					//			//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, vertices);
+					//			//glEnableVertexAttribArray(0);
+					//
+					//			// Verrouillage de la texture
+					//			glBindTexture(GL_TEXTURE_2D, id);
+					//
+					//
+					//			// Rendu
+					//			//glDrawArrays(GL_TRIANGLES, 0, 6);
+					//			
+					//		//	glDrawArrays(GL_QUADS, 0, 4);
+					//
+					//			glBegin(GL_QUADS);	
+					//		
+					//			glTexCoord2d(50, 0);
+					//			glVertex2d(50, 0);
+					//			glTexCoord2d(100, 0);
+					//			glVertex2d(100, 0);
+					//			glTexCoord2d(100, 100);
+					//			glVertex2d(100, 100);
+					//			glTexCoord2d(50, 100);			
+					//			glVertex2d(50, 100);
+					//		
+					//			glEnd();
+					//
+					//
+					//
+					//			// Déverrouillage de la texture
+					//			glBindTexture(GL_TEXTURE_2D, 0);
+					//
+					//
+					//			// Désactivation des tableaux
+					//	//		glDisableVertexAttribArray(2);
+					//	//		glDisableVertexAttribArray(0);
+					//
+					//			// Affichage du triangle
+					//			//glDrawArrays(GL_TRIANGLES, 0, 3);
+					//
+					//			//glLoadIdentity();
+					//			glTranslatef(1, 1, 0);
+					//			//glDrawArrays(GL_QUADS, 0, 4);
+					//
+					//			// On désactive le tableau Vertex Attrib puisque l'on n'en a plus besoin
+					//	//		glDisableVertexAttribArray(0);
+					//
+					//
+					//
+					//
+					//			//glDisable(GL_TEXTURE_2D);
+					////			glBindTexture(GL_TEXTURE_2D, 0);
+					//
+					//			// Désactivation du shader
+					//	//		glUseProgram(0);
+
 
 					//
-					//Destruction des skills
+					//Afficher le tout
 					//
+					SDL_RenderPresent(gRenderer);
+					//glClearColor(0.0, 0.0, 0.0, 1.0);
+					//SDL_GL_SwapWindow(gWindow);
 
-					auto i = std::begin(active_skills);
-				
-					while (i != std::end(active_skills))
+					// +1 frame
+					++countedFrames;
+
+
+					//If frame finished early
+					frameTicks = capTimer.getTicks();
+					if (frameTicks < SCREEN_TICK_PER_FRAME)
 					{
-						// do some stuff.
-						if (i->getfinish_skill())
-						{
-				
-							//i->gethand_grenade_sprite()->~Sprite();
-							i->~Skills();
-							i = active_skills.erase(i);
-						}
-						else
-						{
-							++i;
-						}
+						//Wait remaining time
+						SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
 					}
 
-
-			//		for (auto &aze : active_skills) // access by reference to avoid copying
-			//		{
-			//			if (aze->getfinish_skill())
-			//			{
-			//				//i->gethand_grenade_sprite()->~Sprite();
-			//				aze->~Skills();
-			//				//aze = active_skills.erase(aze);
-			//			}
-			//		}
-
-
-					/*
-					std::vector<Skills*>::iterator deleteIterator = active_skills.begin();         //iterator??
-					while (deleteIterator != active_skills.end())
-					{
-					if (deleteIterator->geth )
-					deleteIterator = active_skills.erase(deleteIterator);
-					}*/
-
-					/*
-					//printf("%d", active_skills.size());
-					for (auto &aze : active_skills)
-					{
-					if (aze->getfinish_skill())
-					{
-					aze->gethand_grenade_sprite()->~Sprite();
-					aze->~Skills();
-					i = active_skills.erase(i);
-					if (i < active_skills.size())
-					{
-					++i;
-					}
-					}
-					}
-					*/
-					//Maybe opti
-					/*
-					active_skills.erase(std::remove_if (active_skills.begin(),active_skills.end(),[](Skills element)->bool
-					{
-					// Do "some stuff", then return true if element should be removed.
-					return true;
-					}
-					),
-					active_skills.end()
-					);
-					*/
-				}
-
-				//Dessiner le carré de sélection
-				if (drawselect)
-				{
-					SDL_SetRenderDrawColor(gRenderer, 0, 255, 0, 255);
-					SDL_RenderDrawRect(gRenderer, &mouserect);
-					SDL_SetRenderDrawColor(gRenderer, 0, 255, 100, 50);
-					SDL_RenderFillRect(gRenderer, &mouserect);
-					drawselect = false;
-				}
-
-				//Dessiner le Hud
-				hud->gethudstyle()->Draw();
-				hud->drawtext();
-				hud->getminimap()->Draw();
-				hud->drawminimap(units);
-				hud->drawskills(priorityunit);
-
-				//if (selection)
-				//{
-				//	hud_noselect = true;
-				//}
-				if (allyselected && hud_noselect == false)
-				{
-					skills_mousexy[0] = input.MouseX();
-					skills_mousexy[1] = input.MouseY();
-					if (selection == false)
-					{
-						if (hud->skill_mouse_actions(priorityunit, skills_mousexy[0], skills_mousexy[1], leftclick, leftclick_release, input.getTouche(SDL_SCANCODE_LSHIFT)))
-						{
-							selectedskill = true;
-							selectedskill_mouse = true;
-						}
-					}
-				}
-				//hud_noselect = false;
-
-				//Dessiner la souris
-
-				if (selectedskill)
-				{
-					mouse_sprite_skill->SetX(input.MouseX()-15);
-					mouse_sprite_skill->SetY(input.MouseY()-15);
-					mouse_sprite_skill->Draw();
-				}
-				else
-				{
-					mouse_sprite->SetX(input.MouseX() - 6);
-					mouse_sprite->SetY(input.MouseY());
-					mouse_sprite->Draw();
-				}
-
-				////////////int centrex = SCREEN_WIDTH / 2;
-				////////////int centrey = SCREEN_HEIGHT / 2;
-				////////////
-				////////////int rayon = 10;
-				////////////
-				////////////for (int j = rayon; j < (rayon + 5); ++j)
-				////////////{
-				////////////	for (int i = 0; i < 720; ++i)
-				////////////	{
-				////////////		int x;
-				////////////		int y;
-				////////////
-				////////////		x = centrex + j * cos(i/2);
-				////////////		y = centrey + j * sin(i/2);
-				////////////		SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 0xFF);
-				////////////		SDL_RenderDrawPoint(gRenderer, x, y);
-				////////////
-				////////////	}
-				////////////}
-				////////////
-				////////////rayon = rayon + 5;
-				////////////int trans[3] = { 0xF0, 0x0F, 0 };
-				////////////
-				////////////for (int j = 0; j < 3; ++j)
-				////////////{
-				////////////	for (int i = 0; i < 720; ++i)
-				////////////	{
-				////////////		int x;
-				////////////		int y;
-				////////////
-				////////////		x = centrex + (rayon + j) * cos(i / 2);
-				////////////		y = centrey + (rayon + j) * sin(i / 2);
-				////////////		SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, trans[j]);
-				////////////		SDL_RenderDrawPoint(gRenderer, x, y);
-				////////////
-				////////////	}
-				////////////}
-				////////////
-				////////////float xpers = 15, ypers = 15;
-				////////////float exploX = 10, exploxY = 10;
-				////////////
-				////////////float norma = sqrt((exploX - xpers)*(exploX - xpers) + (exploxY - ypers)*(exploxY - ypers));
-				////////////printf("Norm = %f", norma);
-				////////////
-				////////////rayon = 6;
-				////////////
-				////////////if (norma > rayon)
-				////////////{
-				////////////	std::cout << "FERME TA GUELE JE SUIS PAS MORT" << std::endl;
-				////////////}
-				////////////else
-				////////////{
-				////////////	std::cout << "PETIT BATARD" << std::endl;
-				////////////}
-
-
-				//Set text to be rendered
-				timeText.str("");
-				timeText << "Average Frames Per Second (With Cap) " << avgFPS;
-			
-				//Render text
-				if (!gFPSTextTexture.loadFromRenderedText(gRenderer, fpscount, timeText.str().c_str(), textColor))
-				{
-					printf("Unable to render FPS texture!\n");
-				}
-		
-		
-				//Render textures
-				gFPSTextTexture.render(gRenderer, (SCREEN_WIDTH - gFPSTextTexture.getWidth()) / 2, (SCREEN_HEIGHT - gFPSTextTexture.getHeight()) / 16);
-
-
-	//			//Opengl test
-	//			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//
-	//			//glEnable(GL_TEXTURE_2D);
-	//			//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-	//		//	modelview = gluLookAt(vec3(0, 0, 2), vec3(0, 0, 0), vec3(0, 1, 0));
-	//
-	//			//modelview =( glm::mat4)(glm::vec4(0, 0, 2, 0), glm::vec4(0, 0, 0, 0), glm::vec4(0, 1, 0, 0));
-	//
-	//		//	modelview = { glm::vec4(0, 0, 2, 0), glm::vec4(0, 0, 0, 0), glm::vec4(0, 1, 0, 0) };
-	//		//
-	//	//		modelview  = glm::mat3{
-	//	//			glm::vec3(0, 0, 0),
-	//	//			glm::vec3(0, 0, 0),
-	//	//			glm::vec3(0, 0, 0)
-	//	//		};
-	//   
-	//
-	//	//	// Activation du shader
-	//	//	glUseProgram(shaderBasique.getProgramID());
-	//	//
-	//	//	// Envoi des vertices
-	//	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-	//	//	glEnableVertexAttribArray(0);
-	//	//
-	//	//	// Envoi des coordonnées de texture
-	//	//	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, coordTexture);
-	//	//	glEnableVertexAttribArray(2);
-	//	//	
-	//	//
-	//	//	// Envoi des matrices
-	//	//	glUniformMatrix4fv(glGetUniformLocation(shaderBasique.getProgramID(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-	//	//	glUniformMatrix4fv(glGetUniformLocation(shaderBasique.getProgramID(), "modelview"), 1, GL_FALSE, glm::value_ptr(modelview));
-	//
-	//			//// On remplie puis on active le tableau Vertex Attrib 0
-	//			//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, vertices);
-	//			//glEnableVertexAttribArray(0);
-	//
-	//			// Verrouillage de la texture
-	//			glBindTexture(GL_TEXTURE_2D, id);
-	//
-	//
-	//			// Rendu
-	//			//glDrawArrays(GL_TRIANGLES, 0, 6);
-	//			
-	//		//	glDrawArrays(GL_QUADS, 0, 4);
-	//
-	//			glBegin(GL_QUADS);	
-	//		
-	//			glTexCoord2d(50, 0);
-	//			glVertex2d(50, 0);
-	//			glTexCoord2d(100, 0);
-	//			glVertex2d(100, 0);
-	//			glTexCoord2d(100, 100);
-	//			glVertex2d(100, 100);
-	//			glTexCoord2d(50, 100);			
-	//			glVertex2d(50, 100);
-	//		
-	//			glEnd();
-	//
-	//
-	//
-	//			// Déverrouillage de la texture
-	//			glBindTexture(GL_TEXTURE_2D, 0);
-	//
-	//
-	//			// Désactivation des tableaux
-	//	//		glDisableVertexAttribArray(2);
-	//	//		glDisableVertexAttribArray(0);
-	//
-	//			// Affichage du triangle
-	//			//glDrawArrays(GL_TRIANGLES, 0, 3);
-	//
-	//			//glLoadIdentity();
-	//			glTranslatef(1, 1, 0);
-	//			//glDrawArrays(GL_QUADS, 0, 4);
-	//
-	//			// On désactive le tableau Vertex Attrib puisque l'on n'en a plus besoin
-	//	//		glDisableVertexAttribArray(0);
-	//
-	//
-	//
-	//
-	//			//glDisable(GL_TEXTURE_2D);
-	////			glBindTexture(GL_TEXTURE_2D, 0);
-	//
-	//			// Désactivation du shader
-	//	//		glUseProgram(0);
-
-
-				//
-				//Afficher le tout
-				//
-				SDL_RenderPresent(gRenderer);
-				//glClearColor(0.0, 0.0, 0.0, 1.0);
-				//SDL_GL_SwapWindow(gWindow);
-
-				// +1 frame
-				++countedFrames;
-
-
-				//If frame finished early
-				int frameTicks = capTimer.getTicks();
-				if (frameTicks < SCREEN_TICK_PER_FRAME)
-				{
-					//Wait remaining time
-					SDL_Delay(SCREEN_TICK_PER_FRAME - frameTicks);
 				}
 			}
 		}
 	}
+
 
 	//SDL_DestroyTexture(hudtex);
 	//Free resources and close SDL

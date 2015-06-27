@@ -17,7 +17,7 @@ class Unit
 {
 public:
 	Unit();
-	Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, float hp, float passed_damage, float passed_attackspeed, float passed_speed, float passed_defense, std::vector<int> passed_skills, Sprite* passed_hudpicture, int passed_friendneutralfoe);
+	Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, float hp, float passed_damage, float passed_attackspeed, float passed_speed, float passed_defense,std::vector<int> & passed_skills, Sprite* passed_hudpicture, int passed_friendneutralfoe);
 	~Unit(void);
 
 	void setsprite(Sprite* passed_sprite);
