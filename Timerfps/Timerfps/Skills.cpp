@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Skills.h"
 
+/// TODO : Faire une classe abstraite pour faire comme en java, GUIGUI
 
 Skills::Skills(SDL_Renderer* passed_renderer, Unit* passed_unit, Unit* passed_targetunit, int passed_usedskill, float *passed_camerax, float *passed_cameray, int passed_mousex, int passed_mousey)
 {
@@ -174,73 +175,15 @@ void Skills::hand_grenade()
 
 void Skills::use_skill()
 {
-	//printf("\n%d", skill_number);
-	//printf("%d", skill_number);
-	//printf("%d", skill_number);
-	//printf("%d", skill_number);
-	//printf("%d", skill_number);
-	//printf("%d", unit->getskill_number());
-
-
-	//if (skill_go)
-	//{
-		if (used_skill == 0)
-		{
-			hand_grenade();
-		}
-		else
-		{
-			printf("\n\nERROR : SKILL NOT FOUND\n");
-		}
-	//}
-	//else if (unit->getskill_go())
-	//{
-	//	//skill_go = true;
-	//	//i = unit->getskill_number();
-	//	printf("BZIOEFBZOEIFZEIOFBZEOFIBZEOFIBZEFOIZEBFOIZB\n\n\nEFZOEIFBZEOFBIZOEFIB\n");
-	//	if (unit->getskill_number() == skill_number)
-	//	{
-	//		skill_go = true;
-	//	}
-	//
-	//	unit->setskill_go(false);
-	//
-	//
-	//	//if (unit->skills_bool_size() > 0)
-	//	//{
-	//	//
-	//	//	//for (int i = 0; i < 2; ++i)
-	//	//	//{
-	//	//	//	printf("\n%d\n", unit->skills_bool_size());
-	//	//	//	printf("\n%d\n", unit->skills_bool_size());
-	//	//	//	printf("\n%d\n", unit->skills_bool_size());
-	//	//	//}
-	//	//	//switch (unit->skills_bool_get()[skill_number])
-	//	//	switch (unit->skills_bool_at(0))
-	//	//	{
-	//	//	case 0:
-	//	//		printf("MESCOUILLES\nMESCOUILLES\nMESCOUILLES\nMESCOUILLES\nMESCOUILLES\nMESCOUILLES\n");
-	//	//		break;
-	//	//	case 1:
-	//	//		printf("LOL\nLOL\nLOL\nLOL\nLOL\nLOL\nLOL\nLOL\n");
-	//	//		skill_go = true;
-	//	//		break;
-	//	//	case 2:
-	//	//		printf("BITE\nBITE\nBITE\nBITE\nBITE\nBITE\nBITE\n");
-	//	//		//unit->skills_bool_get().erase(unit->skills_bool_get().begin());
-	//	//		finish_skill = true;
-	//	//	}
-	//	//}
-	//	//else
-	//	//{
-	//	//	finish_skill = true;
-	//	//}
-	//}
-	//else if (unit->getskill_reset() == true && no_reset == false)
-	//{
-	//	finish_skill = true;
-	//}
-
+	// TODO : Switch pour chaque skills
+	if (used_skill == 0)
+	{
+		hand_grenade();
+	}
+	else
+	{
+		printf("\n\nERROR : SKILL NOT FOUND\n");
+	}
 }
 
 void Skills::setmousexy(int passed_mousexy[])

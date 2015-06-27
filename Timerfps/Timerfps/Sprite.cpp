@@ -194,11 +194,6 @@ Sprite::~Sprite(void)
 	SDL_DestroyTexture(image);
 }
 
-void Sprite::DrawSteady()
-{
-	SDL_RenderCopyEx(renderer, image, &crop, &rect, angle, NULL, SDL_FLIP_NONE);
-}
-
 void Sprite::Draw()
 {
 	Position.x = rect.x + *CameraX;
@@ -206,10 +201,7 @@ void Sprite::Draw()
 	Position.w = rect.w;
 	Position.h = rect.h;
 
-	//SDL_RenderCopy(renderer, image, &crop, &Position);
 	SDL_RenderCopyEx(renderer, image, &crop, &Position, angle, NULL, flipType);
-
-
 }
 
 void Sprite::SetX(float X)
@@ -251,7 +243,6 @@ void Sprite::SetOrgin(float X, float Y)
 	Orgin_Y = Y;
 
 	SetPosition(GetX(), GetY());
-
 }
 
 void Sprite::SetWidth(int W)
@@ -274,26 +265,6 @@ int Sprite::GetHeight()
 	return rect.h;
 }
 
-SDL_Rect Sprite::GetRect()
-{
-	return rect;
-}
-
-void Sprite::SetRect(SDL_Rect rec)
-{
-	rect = rec;
-}
-
-SDL_Rect Sprite::GetPosition()
-{
-	return Position;
-}
-
-void Sprite::SetPosition(SDL_Rect pos)
-{
-	Position = pos;
-}
-
 int Sprite::GetAngle()
 {
 	return angle;
@@ -302,11 +273,6 @@ int Sprite::GetAngle()
 void Sprite::SetAngle(int passed_angle)
 {
 	angle = passed_angle;
-}
-
-SDL_Surface* Sprite::getsurface()
-{
-	return surfaceimage;
 }
 
 void Sprite::setfliptype(SDL_RendererFlip passed_fliptype)

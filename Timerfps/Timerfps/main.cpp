@@ -2,6 +2,8 @@
 /*This source code copyrighted by Lazy Foo' Productions (2004-2014)
 and may not be redistributed without written permission.*/
 
+// TODO : 
+
 //Using SDL, SDL_image, SDL_ttf, standard IO, strings, and string streams
 #include <SDL/include/SDL.h>
 #include <SDL/include/SDL_image.h>
@@ -87,59 +89,9 @@ LTexture gFPSTextTexture;
 //hud text
 LTexture hudtext;
 
-//Opengl context
-//SDL_GLContext contexteOpenGL = NULL;
-
-/*
-//Texture wrapper class
-class LTexture
-{
-public:
-	//Initializes variables
-	LTexture();
-
-	//Deallocates memory
-	~LTexture();
-
-	//Loads image at specified path
-	bool loadFromFile(std::string path);
-
-#ifdef _SDL_TTF_H
-	//Creates image from font string
-	bool loadFromRenderedText(std::string textureText, SDL_Color textColor);
-#endif
-
-	//Deallocates texture
-	void free();
-
-	//Set color modulation
-	void setColor(Uint8 red, Uint8 green, Uint8 blue);
-
-	//Set blending
-	void setBlendMode(SDL_BlendMode blending);
-
-	//Set alpha modulation
-	void setAlpha(Uint8 alpha);
-
-	//Renders texture at given point
-	void render(int x, int y, SDL_Rect* clip = NULL, double angle = 0.0, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE);
-
-	//Gets image dimensions
-	int getWidth();
-	int getHeight();
-
-private:
-	//The actual hardware texture
-	SDL_Texture* mTexture;
-
-	//Image dimensions
-	int mWidth;
-	int mHeight;
-};
-
-*/
-
 //The application time based timer
+
+// TODO : Faire une classe séparé
 class LTimer
 {
 public:
@@ -170,158 +122,7 @@ private:
 	bool mPaused;
 	bool mStarted;
 };
-/*
-//Scene textures
-LTexture gFPSTextTexture;
 
-LTexture::LTexture()
-{
-	//Initialize
-	mTexture = NULL;
-	mWidth = 0;
-	mHeight = 0;
-}
-
-LTexture::~LTexture()
-{
-	//Deallocate
-	free();
-}
-
-bool LTexture::loadFromFile(std::string path)
-{
-	//Get rid of preexisting texture
-	free();
-
-	//The final texture
-	SDL_Texture* newTexture = NULL;
-
-	//Load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if (loadedSurface == NULL)
-	{
-		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-	}
-	else
-	{
-		//Color key image
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0xFF, 0xFF));
-
-		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
-		if (newTexture == NULL)
-		{
-			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-		}
-		else
-		{
-			//Get image dimensions
-			mWidth = loadedSurface->w;
-			mHeight = loadedSurface->h;
-		}
-
-		//Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
-	}
-
-	//Return success
-	mTexture = newTexture;
-	return mTexture != NULL;
-}
-
-#ifdef _SDL_TTF_H
-bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor)
-{
-	//Get rid of preexisting texture
-	free();
-
-	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, textureText.c_str(), textColor);
-	if (textSurface != NULL)
-	{
-		//Create texture from surface pixels
-		mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
-		if (mTexture == NULL)
-		{
-			printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
-		}
-		else
-		{
-			//Get image dimensions
-			mWidth = textSurface->w;
-			mHeight = textSurface->h;
-		}
-
-		//Get rid of old surface
-		SDL_FreeSurface(textSurface);
-	}
-	else
-	{
-		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-
-
-	//Return success
-	return mTexture != NULL;
-}
-#endif
-
-void LTexture::free()
-{
-	//Free texture if it exists
-	if (mTexture != NULL)
-	{
-		SDL_DestroyTexture(mTexture);
-		mTexture = NULL;
-		mWidth = 0;
-		mHeight = 0;
-	}
-}
-
-void LTexture::setColor(Uint8 red, Uint8 green, Uint8 blue)
-{
-	//Modulate texture rgb
-	SDL_SetTextureColorMod(mTexture, red, green, blue);
-}
-
-void LTexture::setBlendMode(SDL_BlendMode blending)
-{
-	//Set blending function
-	SDL_SetTextureBlendMode(mTexture, blending);
-}
-
-void LTexture::setAlpha(Uint8 alpha)
-{
-	//Modulate texture alpha
-	SDL_SetTextureAlphaMod(mTexture, alpha);
-}
-
-void LTexture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip)
-{
-	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-
-	//Set clip rendering dimensions
-	if (clip != NULL)
-	{
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-	}
-
-	//Render to screen
-	SDL_RenderCopyEx(gRenderer, mTexture, clip, &renderQuad, angle, center, flip);
-}
-
-int LTexture::getWidth()
-{
-	return mWidth;
-}
-
-int LTexture::getHeight()
-{
-	return mHeight;
-}
-*/
 LTimer::LTimer()
 {
 	//Initialize the variables
@@ -423,35 +224,7 @@ bool LTimer::isPaused()
 	//Timer is running and paused
 	return mPaused && mStarted;
 }
-/*
-class Player
-{
 
-public:
-	//Initializes variables
-	Player();
-
-	//Deallocates memory
-	~Player();
-
-	void drawplayer();
-
-	//Gets image dimensions
-	int getWidth();
-	int getHeight();
-
-private:
-	//The actual hardware texture
-	SDL_Texture* mTexture;
-
-	//Image dimensions
-	int mWidth;
-	int mHeight;
-
-
-};
-
-*/
 void input_handle(void)
 {
 	SDL_Event event;
@@ -620,26 +393,6 @@ bool init()
 	return success;
 }
 
-
-/*
-bool loadMedia()
-{
-	//Loading success flag
-	bool success = true;
-
-	//Open the font
-	gFont = TTF_OpenFont("lazy.ttf", 28);
-	if (gFont == NULL)
-	{
-		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
-		success = false;
-	}
-
-	return success;
-}
-*/
-
-
 void close()
 {
 	//Free loaded images
@@ -657,111 +410,6 @@ void close()
 	IMG_Quit();
 	SDL_Quit();
 }
-/*
-int Gl_init()
-{
-	// Initialisation de la SDL
-
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		std::cout << "Erreur lors de l'initialisation de la SDL : " << SDL_GetError() << std::endl;
-		SDL_Quit();
-
-		return -1;
-	}
-
-
-	// Version d'OpenGL
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-
-
-	// Double Buffer
-
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
-
-	// Création de la fenêtre
-
-	gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-
-	if (gWindow == 0)
-	{
-		std::cout << "Erreur lors de la creation de la fenetre : " << SDL_GetError() << std::endl;
-		SDL_Quit();
-
-		return -1;
-	}
-
-
-	// Création du contexte OpenGL
-
-	contexteOpenGL = SDL_GL_CreateContext(gWindow);
-
-	if (contexteOpenGL == 0)
-	{
-		std::cout << SDL_GetError() << std::endl;
-		SDL_DestroyWindow(gWindow);
-		SDL_Quit();
-
-		return -1;
-	}
-
-	// On initialise GLEW
-
-	GLenum initialisationGLEW(glewInit());
-
-	// Si l'initialisation a échouée :
-
-	if (initialisationGLEW != GLEW_OK)
-	{
-		// On affiche l'erreur grâce à la fonction : glewGetErrorString(GLenum code)
-
-		std::cout << "Erreur d'initialisation de GLEW : " << glewGetErrorString(initialisationGLEW) << std::endl;
-
-
-		// On quitte la SDL
-		SDL_GL_DeleteContext(contexteOpenGL);
-		SDL_DestroyWindow(gWindow);
-		SDL_Quit();
-
-		return -1;
-	}
-
-	//Initialize PNG loading
-	int imgFlags = IMG_INIT_PNG;
-	if (!(IMG_Init(imgFlags) & imgFlags))
-	{
-		printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
-		return -1;
-	}
-
-	//Initialize SDL_ttf
-	if (TTF_Init() == -1)
-	{
-		printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-		return -1;
-	}
-
-
-	return 1;
-}
-*/
-
-//bool load_level_from_file(std::string passed_level_file,std::vector<Unit*> passed_allyunits)
-//{
-//	bool level_loaded = true;
-//	std::ifstream mapp(passed_level_file);
-//	int loadlevel_units_number = 0;
-//	std::string loadlevel_mapfile;
-//
-//	return level_loaded;
-//}
-
-
-
 
 int main(int argc, char* args[])
 {
@@ -801,28 +449,6 @@ int main(int argc, char* args[])
 	//Brouillard de guerre
 	SDL_Rect rect_fogofwar;
 	SDL_Color color_fogofwar = { 0, 0, 0, 100 };
-
-	//Du brouillon pour le fogofwar
-	//////////////////////////
-	//surface_fogofwar = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-	//SDL_Texture *texture_fogofwar;
-	//SDL_Texture* auxtexture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 500, 500);
-
-	//////
-//	SDL_Rect sourceRect;
-//	SDL_Rect destRect;
-//	
-//	Uint32* destPixels;
-//	Uint32* srcPixels;
-//	Uint32* destPixel;
-//	Uint32* srcPixel;
-//	
-//	unsigned char* destAlpha;
-//	unsigned char* srcAlpha;
-//	static bool keepFogRemoved = false;
-	
-	///////////////////////////// fin du brouillon
-
 
 	//C'est dans le nom connard
 	Input input;
@@ -908,99 +534,6 @@ int main(int argc, char* args[])
 
 			//In memory text stream
 			std::stringstream timeText;
-
-		//	gluOrtho2D(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT);
-		
-
-	//		/////////////////
-	//		//Opengl test
-	//		glEnable(GL_TEXTURE_2D);
-	//		glEnable(GL_BLEND);
-	//
-	//		glMatrixMode(GL_PROJECTION);
-	//		glOrtho(0, SCREEN_WIDTH, 0, SCREEN_HEIGHT, 0, 1);
-	//		glMatrixMode(GL_MODELVIEW);
-	//
-	//		glm::mat4 projection;
-	//		glm::mat3 modelview;
-	//
-	//		projection = glm::perspective(70.0, (double)SCREEN_WIDTH / SCREEN_HEIGHT, 1.0, 100.0);
-	//		modelview = glm::mat3(1.0);
-	//
-	//
-	//		float vertices[] = { -0.5, -0.5, 0.0, 0.5, 0.5, -0.5 };
-	//		float coordTexture[] = { 0, 0, 1, 0, 1, 1,     // Triangle 1
-	//			0, 0, 0, 1, 1, 1 };    // Triangle 2
-	//
-	//		SDL_Surface *imageSDL = IMG_Load("destination_circle_skills.png");
-	//		if (imageSDL == 0)
-	//		{
-	//			printf("\nBTIEBTIEBTIEBTIEBTEITBBITEBITEBTIEB");
-	//		}
-	//		GLuint id;
-	//
-	//		glGenTextures(1, &id);
-	//		glBindTexture(GL_TEXTURE_2D, id);
-	//
-	//		GLenum formatInterne(0);
-	//		GLenum format(0);
-	//
-	//		if (imageSDL->format->BytesPerPixel == 3)
-	//		{
-	//			// Format interne
-	//			formatInterne = GL_RGB;
-	//			// Format
-	//			if (imageSDL->format->Rmask == 0xff)
-	//				format = GL_RGB;
-	//			else
-	//				format = GL_BGR;
-	//		}
-	//		// Détermination du format et du format interne pour les images à 4 composantes
-	//		else if (imageSDL->format->BytesPerPixel == 4)
-	//		{
-	//			// Format interne
-	//			formatInterne = GL_RGBA;
-	//			// Format
-	//			if (imageSDL->format->Rmask == 0xff)
-	//				format = GL_RGBA;
-	//			else
-	//				format = GL_BGRA;
-	//		}
-	//		// Dans les autres cas, on arrête le chargement
-	//		else
-	//		{
-	//			std::cout << "Erreur, format interne de l'image inconnu" << std::endl;
-	//			SDL_FreeSurface(imageSDL);
-	//			return false;
-	//		}
-	//
-	//		//
-	//		//
-	//		//// Verrouillage
-	//		//
-	//		//
-	//	//	glTexImage2D(GL_TEXTURE_2D, 0, 4 , imageSDL->w, imageSDL->h, 0, GL_RGBA , GL_UNSIGNED_BYTE, imageSDL->pixels);
-	//		glTexImage2D(GL_TEXTURE_2D, 0, formatInterne, imageSDL->w, imageSDL->h, 0, format, GL_UNSIGNED_BYTE, imageSDL->pixels);
-	//	
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	//
-	//		//
-	//		//// Déverrouillage
-	//		//
-	//		glBindTexture(GL_TEXTURE_2D, 0);
-	//	
-	//		SDL_FreeSurface(imageSDL);
-	//
-	//
-	//		Shader shaderBasique("Shaders/basique_2D.vert", "Shaders/basique.frag");
-	//		shaderBasique.charger();
-	//		//
-	//		/////////////////
-	//		
-	//		//glEnable(GL_TEXTURE_2D);
-	//		//glShadeModel(GL_FLAT);
-	//
 
 			while (!game_game_quit)
 			{
@@ -1350,6 +883,7 @@ int main(int argc, char* args[])
 				fpsTimer.start();
 
 				//Remplissage des vecteurs d'unités par type
+				// TODO : Faire une variable pour ne tester que les unités affichier à l'écran 
 				for (auto &aze : units) // access by reference to avoid copying
 				{
 					if (aze->getfriendneutralfoe() == 0)
@@ -1378,6 +912,8 @@ int main(int argc, char* args[])
 				//
 				while (!quit && !game_game_quit)
 				{
+
+					// TODO FAIRE UNE CLASSE CAMERA POUR CEtte fonction
 
 					//	if (countedFrames > 120)
 					//	{
@@ -1502,39 +1038,27 @@ int main(int argc, char* args[])
 						// eventuellement faire le active_skills.push_back au moment du action
 						//conclusion : C CHO
 						//
-						if (selectedskill && hud_leftclick == false)
+						if ((selectedskill == true) && (hud_leftclick == false))
 						{
 							selectedskill = false;
 							skills_mousexy[0] = input.MouseX() - CameraX;
 							skills_mousexy[1] = input.MouseY() - CameraY;
+
 							for (auto &aze : allyunits)
 							{
 								if (aze->getselectedskill())
 								{
 									//skill_no_reset = false;
 									if (input.getTouche(SDL_SCANCODE_LSHIFT) == false)
-									{
-										//aze->setaction_over(true);
-										//aze->setaction_over(true);
+									{										
 										aze->action_clearlist();
 										aze->setreset_action();
 										aze->mousexylist_clear();
-										aze->setaction_over(true);
-										//aze->skills_bool_clear();
-										//aze->setskill_number(0);
-										//aze->setskill_over(true);
-										//aze->setnumber_of_skill_used(0);
-										//aze->setskill_reset(true);
-										//skill_no_reset = true;
+										aze->setaction_over(true);										
 									}
-									//aze->increment_number_of_skill_used();
-									//aze->skills_bool_pushback(0);
-									//aze->action_pushback(aze->getskills().at(aze->getusedskill()));
 									aze->action_pushback(aze->skills_at(aze->getusedskill()));
 									aze->mousexy_pushback(skills_mousexy[0], skills_mousexy[1]);
-									//active_skills.push_back(Skills(gRenderer, aze, NULL, aze->getskills().at(aze->getusedskill()), &CameraX, &CameraY, skills_mousexy));							
 									aze->setselectedskill(false);
-									//aze->setaction_start(true);
 								}
 							}
 						}
@@ -1543,7 +1067,7 @@ int main(int argc, char* args[])
 					//
 					//Actions du clic gauche en laissant appuyer(séléction)
 					//
-					if (leftclick == true && selectedskill_mouse == false)
+					if ((leftclick == true) && (selectedskill_mouse == false))
 					{
 						if (hud_leftclick == false)
 						{
@@ -2030,475 +1554,7 @@ int main(int argc, char* args[])
 					bob->draw();
 					zergling->getsprite()->Draw();
 
-					/*
-					for (auto &aze : units) // access by reference to avoid copying
-					{
-					aze->getsprite()->Draw();
-					}
-					*/
-
-
-
-
-					/////////////////////////Brouillon 3 du fogofwar
-					/////////////////////////
-					/////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-					//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
-					//SDL_RenderDrawRect(gRenderer, &map_rect);
-					//SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 100);
-					//SDL_RenderFillRect(gRenderer, &map_rect);
-
-
-
-					////////////change the rendering target
-					//////////
-					//////////SDL_SetTextureBlendMode(auxtexture, SDL_BLENDMODE_BLEND);
-					//////////SDL_SetRenderTarget(gRenderer, auxtexture);
-					//////////
-					////////////render what we want
-					//////////roger->draw(); //render my class triangle e.g
-					//////////
-					//////////
-					////////////change the target back to the default and then render the aux
-					//////////
-					//////////SDL_SetRenderTarget(gRenderer, NULL); //NULL SETS TO DEFAULT
-					//////////bob->draw();
-					//////////SDL_DestroyTexture(auxtexture);
-
-
-
-
-					////////////////////////////////////////////////////////
-					//SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-					//
-					//sourceRect = { 0 + (int)CameraX, 0 + (int)CameraY, surface_fogofwar_remove->w, surface_fogofwar_remove->h };
-					//destRect = { 300 + (int)CameraX, 300 + (int)CameraY, surface_fogofwar_remove->w, surface_fogofwar_remove->h };
-					//
-					//	// Make sure our rects stays within bounds
-					//	if (destRect.x < 0)
-					//	{
-					//		sourceRect.x -= destRect.x; // remove the pixels outside of the surface
-					//		sourceRect.w -= sourceRect.x; // shrink to the surface, not to offset fog
-					//		destRect.x = 0;
-					//		destRect.w -= sourceRect.x; // shrink the width to stay within bounds
-					//	}
-					//	if (destRect.y < 0)
-					//	{
-					//		sourceRect.y -= destRect.y; // remove the pixels outside
-					//		sourceRect.h -= sourceRect.y; // shrink to the surface, not to offset fog
-					//		destRect.y = 0;
-					//		destRect.h -= sourceRect.y; // shrink the height to stay within bounds
-					//	}
-					//	
-					//	int xDistanceFromEdge = (destRect.x + destRect.w) - surface_fogofwar->w;
-					//	if (xDistanceFromEdge > 0) // we're busting
-					//	{
-					//		sourceRect.w -= xDistanceFromEdge;
-					//		destRect.w -= xDistanceFromEdge;
-					//	}
-					//	int yDistanceFromEdge = (destRect.y + destRect.h) - surface_fogofwar->h;
-					//	if (yDistanceFromEdge > 0) // we're busting
-					//	{
-					//		sourceRect.h -= yDistanceFromEdge;
-					//		destRect.h -= yDistanceFromEdge;
-					//	}
-					//
-					//	SDL_LockSurface(surface_fogofwar);
-					//
-					//	destPixels = (Uint32*)surface_fogofwar->pixels;
-					//	srcPixels = (Uint32*)surface_fogofwar_remove->pixels;
-					//
-					//
-					//	for (int y = 0; y < destRect.w; ++y)
-					//	{
-					//		for (int x = 0; x < destRect.h; ++x)
-					//		{
-					//			destPixel = destPixels + (y + destRect.y) * surface_fogofwar->w + destRect.x + x;
-					//			srcPixel = srcPixels + (y + sourceRect.y) * surface_fogofwar_remove->w + sourceRect.x + x;
-					//
-					//			destAlpha = (unsigned char*)destPixel + 3; // fetch alpha channel
-					//			srcAlpha = (unsigned char*)srcPixel + 3; // fetch alpha channel
-					//			if (keepFogRemoved == true && *srcAlpha > 0)
-					//			{
-					//				continue; // skip this pixel
-					//			}
-					//
-					//			*destAlpha = *srcAlpha;
-					//		}
-					//	}
-					//
-					//	SDL_UnlockSurface(surface_fogofwar);
-
-
-					//SDL_LockSurface(surface_fogofwar);
-					//
-					//for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY()+ 200; ++y)
-					//{
-					//	for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX()+200; ++x)
-					//	{
-					//		if (x >= 0 && y >= 0)
-					//		{
-					//			p = (Uint8 *)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x * surface_fogofwar->format->BytesPerPixel;
-					//			//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
-					//			*(Uint32 *)p = fogofwar_pixel2;
-					//		}
-					//	}
-					//}
-					//
-					//SDL_UnlockSurface(surface_fogofwar);
-
-
-
-					/////////////////////////////////////////////////////////////////
-					//////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////
-
-
-
-					//	SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-
-
-					//	rect_fogofwar.x = 0 + (int)CameraX;
-					//	rect_fogofwar.y = 0 + (int)CameraY;
-					//SDL_LockSurface(surface_fogofwar);
-
-					//	for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY() + 200; ++y)
-					//	{
-					//		for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX() + 200; ++x)
-					//		{
-					//			if (x >= 0 && y >= 0)
-					//			{
-					//				p = (Uint8 *)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x * surface_fogofwar->format->BytesPerPixel;
-					//				//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
-					//				*(Uint32 *)p = fogofwar_pixel2;
-					//			}
-					//		}
-					//	}
-
-					//SDL_UnlockSurface(surface_fogofwar);
-
-					//texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
-
-					//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
-					//			
-					//SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
-					//				SDL_LockTexture(texture_fogofwar, nullptr, static_cast<void **>(&fogofwar_pixels), &fogofwar_pitch);
-					//				//SDL_LockTexture(texture_fogofwar, NULL,&fogofwar_pixels, &fogofwar_pitch);
-					//				for (int y = bob->getsprite()->GetY(); y < bob->getsprite()->GetY() + 500; ++y)
-					//				{
-					//					++loly;
-					//					for (int x = bob->getsprite()->GetX(); x < bob->getsprite()->GetX() + 500; ++x)
-					//					{
-					//						p = (Uint8 *)fogofwar_pixels + y * fogofwar_pitch + x * surface_fogofwar->format->BytesPerPixel;
-					//						//fogofwar_pixel = (Uint32*)surface_fogofwar->pixels + y * surface_fogofwar->pitch + x;
-					//						
-					//						//on test si le pixel est dans les limites de la texture, sinon crash (a part pour le x <1360 là on boucle sur la texture)
-					//						if (x >= 0 && y >= 0 && x < 1360 && y < 1520)	//1360 et 1520 représentent la taille de la texture fogofwar donc de la map
-					//						{
-					//							//destAlpha = (unsigned char*)p + 3; // fetch alpha channel
-					//
-					//							//destAlpha = srcAlpha;
-					//							//*(Uint32 *)p = fogofwar_remove_pixels[lolx];
-					//							*(Uint32 *)p = transparent;
-					//						}
-					//						++lolx;
-					//						
-					//					}
-					//				}
-					//				SDL_UnlockTexture(texture_fogofwar);
-					//				
-					//				lolx = 0;
-					//				loly = 0;
-					//
-
-
-
-
-
-					//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
-					//////////////////////////////
-					//////////////////////////////Optimisation de ouf a faire en dessous la boucle for fait 2millions de tours pour tous les pixels de la map
-					//////////////////////////////alors qu'il suffirait de modifier ceux autour des persos
-					//////////////////////////////et/ou même uniquement ceux affichés à l'écran
-					///////////////////////////////
-					///////////////EDIT : le memcpy fonctionne et copie tous les pixels de la surface
-					///////////////sur la texture, environ 2millions l'opti est à faire là
-					///////////////
-					///////////////Deux façons d'opti,1 ne changer que les pixels qu'on veut
-					///////////////avec ou sans memcpy,2 ne faire les changements qu'a l'écran
-					///////////////3 les deux.
-
-					//			SDL_LockTexture(texture_fogofwar, nullptr, reinterpret_cast<void **>(&pixels), &pitch);
-					//			SDL_memcpy(pixels, surface_fogofwar->pixels, surface_fogofwar->pitch*surface_fogofwar->h);
-					//			//pixels32 = (Uint32*)pixels;	
-					//			//pixelCount = (pitch / 4) * surface_fogofwar->h;
-					//			//for (int i = 0; i < 50000 ; i++)
-					//			//{				
-					//			//	pixels32[i] = fogofwar_pixel2;	
-					//			//}		
-					//			SDL_UnlockTexture(texture_fogofwar);
-
-					///////////////////////////
-					///////////////////////////Updatetexture oblige a changer toute la texture
-					///////////////////////////
-					//		if (CameraX > 0 && CameraY > 0)
-					//		{
-					//		screenRect.x += CameraX;
-					//		screenRect.y = CameraY;
-					//		}
-					//		SDL_UpdateTexture(texture_fogofwar, NULL, surface_fogofwar->pixels, surface_fogofwar->pitch);
-					//		////SDL_UnlockTexture(texture_fogofwar);
-					//		//
-					//		SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
-					////SDL_DestroyTexture(texture_fogofwar);
-
-
-					///////////////////////////////////////
-					///////////////////////////////////////DU LOURD
-					///////////////////////////////////////DU LOURD
-					///////////////////////////////////////
-					//			for (row = 0; row < MOOSEPIC_H; ++row) {
-					//				dst = (Uint32*)((Uint8*)pixels + row * pitch);
-					//				for (col = 0; col < MOOSEPIC_W; ++col) {
-					//					color = &MooseColors[*src++];
-					//					*dst++ = (0xFF000000 | (color->r << 16) | (color->g << 8) | color->b);
-					//					
-					//				}
-					//				
-					//			}
-					/////////////////////////////////////////
-					/////////////////////////////////////////
-					/////////////////////////////////////////
-					/////////////////////////////////////////
-					/////////////////////////////////////////
-
-
-
-
-					/////////////////////////////////////////////////////////////////
-					//////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////////////////////////////////
-
-					////void *pixels;
-					////int pitch;
-					//
-					//
-					///* Process events */
-					//
-					///* Modify the pixels of pictureSurface */
-					//
-					///*
-					//* Blit 8-bit palette surface onto the window surface that's
-					//* closer to the texture's format
-					//*/
-					////SDL_BlitSurface(pictureSurface, NULL, windowSurface, NULL);
-					//
-					///* Modify the texture's pixels */
-					//SDL_LockTexture(texture_fogofwar, NULL, &pixels, &pitch);
-					//SDL_ConvertPixels(surface_fogofwar->w, surface_fogofwar->h,
-					//	surface_fogofwar->format->format,
-					//	surface_fogofwar->pixels, surface_fogofwar->pitch,
-					//	SDL_PIXELFORMAT_ARGB8888,
-					//	pixels, pitch);
-					//SDL_UnlockTexture(texture_fogofwar);
-					//
-					///* Make the modified texture visible by rendering it */
-					//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
-
-
-
-
-
-
-
-
-
-
-
-					//SDL_LockTexture(texture_fogofwar, &surface_fogofwar->clip_rect, &pixels, &pitch);
-					//
-					//memcpy(pixels, surface_fogofwar->pixels, (surface_fogofwar->pitch * surface_fogofwar->h));
-					//
-					//int width = surface_fogofwar->w;
-					//int height = surface_fogofwar->h;
-					//
-					//Uint32* pixels32 = (Uint32*)pixels;
-					//int     pixelCount = (pitch / 4) * height;
-					//
-					//Uint32 colorKey = SDL_MapRGBA(surface_fogofwar->format, 0xFF, 0x00, 100, 50);
-					//Uint32 transparent = SDL_MapRGBA(surface_fogofwar->format, 0, 0x00, 0xFF, 0x00);
-					//
-					//
-					//for (int i = 0; i < pixelCount; i++) {
-					//	
-					//		pixels32[i] = transparent;
-					//	
-					//}
-					//
-					//SDL_UnlockTexture(texture_fogofwar);
-					//
-					////SDL_FreeSurface(imageFomatted);
-					////SDL_FreeSurface(surface_fogofwar);
-					//
-					//pixels = NULL;
-					//pitch = 0;
-					//width = 0;
-					//height = 0;
-					//
-					//
-					//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &map_rect);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-					//SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
-					//
-					////Lock texture for manipulation 
-					//SDL_LockTexture(newTexture, &surface_fogofwar->clip_rect);
-					//
-					////Copy loaded/formatted surface pixels 
-					//memcpy(mPixels, formattedSurface->pixels, formattedSurface->pitch * formattedSurface->h);
-					//
-					////Get image dimensions 
-					//mWidth = formattedSurface->w;
-					//mHeight = formattedSurface->h;
-					//
-					////Get pixel data in editable format 
-					//Uint32* pixels = (Uint32*)mPixels;
-					//int pixelCount = (mPitch / 4) * mHeight;
-					//
-					////Map colors 
-					//Uint32 colorKey = SDL_MapRGBA(SDL_GetWindowSurface(gWindow)->format, 0, 0xFF, 0xFF, 0xFF);
-					//Uint32 transparent = SDL_MapRGBA(SDL_GetWindowSurface(gWindow)->format, 0x00, 0xFF, 0xFF, 0x00);
-					//
-					////Color key pixels 
-					//for (int i = 0; i < pixelCount; ++i)
-					//{
-					//	if (pixels[i] == colorKey)
-					//	{
-					//		pixels[i] = transparent;
-					//	}
-					//}
-					//
-					////Unlock texture to update 
-					//SDL_UnlockTexture(newTexture);
-					//mPixels = NULL;
-					//
-					//SDL_SetTextureBlendMode(newTexture, SDL_BLENDMODE_BLEND);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-					////////////////////////////////////////////////////////////////
-
-
-					//SDL_FillRect(surface_fogofwar, NULL, rgba_fogofwar);
-					//
-					//rect_fogofwar.x = -200 + CameraX;
-					//rect_fogofwar.y = -200 + CameraY;
-					//rect_fogofwar.w = carte->getsizex()+400;
-					//rect_fogofwar.h = carte->getsizey()+400;
-					//
-					//texture_fogofwar = SDL_CreateTextureFromSurface(gRenderer, surface_fogofwar);
-					//
-					//SDL_RenderCopy(gRenderer, texture_fogofwar, NULL, &rect_fogofwar);
-					////SDL_DestroyTexture(texture_fogofwar);
-					//
-					//surface_fogofwar->
-					//
-					//
-					//////////////////////////////////////////////////
-					////Get pixel data
-					//Uint32* pixels = (Uint32*)texture_fogofwar->getPixels();
-					//int pixelCount = (gFooTexture.getPitch() / 4) * gFooTexture.getHeight();
-					//
-					////Map colors
-					//Uint32 colorKey = SDL_MapRGB(SDL_GetWindowSurface(gWindow)->format, 0, 0xFF, 0xFF);
-					//Uint32 transparent = SDL_MapRGBA(SDL_GetWindowSurface(gWindow)->format, 0xFF, 0xFF, 0xFF, 0x00);
-					//
-					////Color key pixels
-					//for (int i = 0; i < pixelCount; ++i)
-					//{
-					//	if (pixels[i] == colorKey)
-					//	{
-					//		pixels[i] = transparent;
-					//	}
-					//}
-					//
-					////Unlock texture
-					//gFooTexture.unlockTexture();
-					//
-					//
-					//////////////////////////////////////////////////
-					//
-					//
-					////Lock texture for manipulation
-					//SDL_LockTexture(texture_fogofwar, NULL, , &mPitch);
-					//
-					////Copy loaded/formatted surface pixels
-					//memcpy(mPixels, formattedSurface->pixels, formattedSurface->pitch * formattedSurface->h);
-					//
-					////Unlock texture to update
-					//SDL_UnlockTexture(newTexture);
-					//mPixels = NULL;
-					//
-					////Get image dimensions
-					//mWidth = formattedSurface->w;
-					//mHeight = formattedSurface->h;
-
-
-
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					/////////////////////////////////////////
-					/////////////////////////////////////////
-					/////////////////////////////////////////Fin du brouillon 3 du fogofwar
-
-
-
-
-					//
-					//Dessiner le chemin des unités
-					//
+					
 					for (auto &ally : allyunits)
 					{
 						int i = 0;
@@ -2595,52 +1651,6 @@ int main(int argc, char* args[])
 						}
 
 
-						//		for (auto &aze : active_skills) // access by reference to avoid copying
-						//		{
-						//			if (aze->getfinish_skill())
-						//			{
-						//				//i->gethand_grenade_sprite()->~Sprite();
-						//				aze->~Skills();
-						//				//aze = active_skills.erase(aze);
-						//			}
-						//		}
-
-
-						/*
-						std::vector<Skills*>::iterator deleteIterator = active_skills.begin();         //iterator??
-						while (deleteIterator != active_skills.end())
-						{
-						if (deleteIterator->geth )
-						deleteIterator = active_skills.erase(deleteIterator);
-						}*/
-
-						/*
-						//printf("%d", active_skills.size());
-						for (auto &aze : active_skills)
-						{
-						if (aze->getfinish_skill())
-						{
-						aze->gethand_grenade_sprite()->~Sprite();
-						aze->~Skills();
-						i = active_skills.erase(i);
-						if (i < active_skills.size())
-						{
-						++i;
-						}
-						}
-						}
-						*/
-						//Maybe opti
-						/*
-						active_skills.erase(std::remove_if (active_skills.begin(),active_skills.end(),[](Skills element)->bool
-						{
-						// Do "some stuff", then return true if element should be removed.
-						return true;
-						}
-						),
-						active_skills.end()
-						);
-						*/
 					}
 
 					//Dessiner le carré de sélection
@@ -2694,62 +1704,7 @@ int main(int argc, char* args[])
 						mouse_sprite->Draw();
 					}
 
-					////////////int centrex = SCREEN_WIDTH / 2;
-					////////////int centrey = SCREEN_HEIGHT / 2;
-					////////////
-					////////////int rayon = 10;
-					////////////
-					////////////for (int j = rayon; j < (rayon + 5); ++j)
-					////////////{
-					////////////	for (int i = 0; i < 720; ++i)
-					////////////	{
-					////////////		int x;
-					////////////		int y;
-					////////////
-					////////////		x = centrex + j * cos(i/2);
-					////////////		y = centrey + j * sin(i/2);
-					////////////		SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, 0xFF);
-					////////////		SDL_RenderDrawPoint(gRenderer, x, y);
-					////////////
-					////////////	}
-					////////////}
-					////////////
-					////////////rayon = rayon + 5;
-					////////////int trans[3] = { 0xF0, 0x0F, 0 };
-					////////////
-					////////////for (int j = 0; j < 3; ++j)
-					////////////{
-					////////////	for (int i = 0; i < 720; ++i)
-					////////////	{
-					////////////		int x;
-					////////////		int y;
-					////////////
-					////////////		x = centrex + (rayon + j) * cos(i / 2);
-					////////////		y = centrey + (rayon + j) * sin(i / 2);
-					////////////		SDL_SetRenderDrawColor(gRenderer, 255, 0, 0, trans[j]);
-					////////////		SDL_RenderDrawPoint(gRenderer, x, y);
-					////////////
-					////////////	}
-					////////////}
-					////////////
-					////////////float xpers = 15, ypers = 15;
-					////////////float exploX = 10, exploxY = 10;
-					////////////
-					////////////float norma = sqrt((exploX - xpers)*(exploX - xpers) + (exploxY - ypers)*(exploxY - ypers));
-					////////////printf("Norm = %f", norma);
-					////////////
-					////////////rayon = 6;
-					////////////
-					////////////if (norma > rayon)
-					////////////{
-					////////////	std::cout << "FERME TA GUELE JE SUIS PAS MORT" << std::endl;
-					////////////}
-					////////////else
-					////////////{
-					////////////	std::cout << "PETIT BATARD" << std::endl;
-					////////////}
-
-
+					
 					//Set text to be rendered
 					timeText.str("");
 					timeText << "Average Frames Per Second (With Cap) " << avgFPS;
@@ -2763,96 +1718,6 @@ int main(int argc, char* args[])
 
 					//Render textures
 					gFPSTextTexture.render(gRenderer, (SCREEN_WIDTH - gFPSTextTexture.getWidth()) / 2, (SCREEN_HEIGHT - gFPSTextTexture.getHeight()) / 16);
-
-
-					//			//Opengl test
-					//			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-					//
-					//			//glEnable(GL_TEXTURE_2D);
-					//			//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-					//		//	modelview = gluLookAt(vec3(0, 0, 2), vec3(0, 0, 0), vec3(0, 1, 0));
-					//
-					//			//modelview =( glm::mat4)(glm::vec4(0, 0, 2, 0), glm::vec4(0, 0, 0, 0), glm::vec4(0, 1, 0, 0));
-					//
-					//		//	modelview = { glm::vec4(0, 0, 2, 0), glm::vec4(0, 0, 0, 0), glm::vec4(0, 1, 0, 0) };
-					//		//
-					//	//		modelview  = glm::mat3{
-					//	//			glm::vec3(0, 0, 0),
-					//	//			glm::vec3(0, 0, 0),
-					//	//			glm::vec3(0, 0, 0)
-					//	//		};
-					//   
-					//
-					//	//	// Activation du shader
-					//	//	glUseProgram(shaderBasique.getProgramID());
-					//	//
-					//	//	// Envoi des vertices
-					//	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices);
-					//	//	glEnableVertexAttribArray(0);
-					//	//
-					//	//	// Envoi des coordonnées de texture
-					//	//	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, coordTexture);
-					//	//	glEnableVertexAttribArray(2);
-					//	//	
-					//	//
-					//	//	// Envoi des matrices
-					//	//	glUniformMatrix4fv(glGetUniformLocation(shaderBasique.getProgramID(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-					//	//	glUniformMatrix4fv(glGetUniformLocation(shaderBasique.getProgramID(), "modelview"), 1, GL_FALSE, glm::value_ptr(modelview));
-					//
-					//			//// On remplie puis on active le tableau Vertex Attrib 0
-					//			//glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, vertices);
-					//			//glEnableVertexAttribArray(0);
-					//
-					//			// Verrouillage de la texture
-					//			glBindTexture(GL_TEXTURE_2D, id);
-					//
-					//
-					//			// Rendu
-					//			//glDrawArrays(GL_TRIANGLES, 0, 6);
-					//			
-					//		//	glDrawArrays(GL_QUADS, 0, 4);
-					//
-					//			glBegin(GL_QUADS);	
-					//		
-					//			glTexCoord2d(50, 0);
-					//			glVertex2d(50, 0);
-					//			glTexCoord2d(100, 0);
-					//			glVertex2d(100, 0);
-					//			glTexCoord2d(100, 100);
-					//			glVertex2d(100, 100);
-					//			glTexCoord2d(50, 100);			
-					//			glVertex2d(50, 100);
-					//		
-					//			glEnd();
-					//
-					//
-					//
-					//			// Déverrouillage de la texture
-					//			glBindTexture(GL_TEXTURE_2D, 0);
-					//
-					//
-					//			// Désactivation des tableaux
-					//	//		glDisableVertexAttribArray(2);
-					//	//		glDisableVertexAttribArray(0);
-					//
-					//			// Affichage du triangle
-					//			//glDrawArrays(GL_TRIANGLES, 0, 3);
-					//
-					//			//glLoadIdentity();
-					//			glTranslatef(1, 1, 0);
-					//			//glDrawArrays(GL_QUADS, 0, 4);
-					//
-					//			// On désactive le tableau Vertex Attrib puisque l'on n'en a plus besoin
-					//	//		glDisableVertexAttribArray(0);
-					//
-					//
-					//
-					//
-					//			//glDisable(GL_TEXTURE_2D);
-					////			glBindTexture(GL_TEXTURE_2D, 0);
-					//
-					//			// Désactivation du shader
-					//	//		glUseProgram(0);
 
 
 					//

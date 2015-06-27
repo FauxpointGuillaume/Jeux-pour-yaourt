@@ -5,9 +5,20 @@
 Unit::Unit()
 {}
 
-Unit::Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, float passed_hp, float passed_damage, float passed_attackspeed, float passed_speed, float passed_defense, std::vector<int> & passed_skills, Sprite* passed_hudpicture, int passed_friendneutralfoe)
+Unit::Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, float passed_hp, float passed_damage, float passed_attackspeed, float passed_speed, float passed_defense, std::vector<int> & passed_skills, Sprite* passed_hudpicture, int passed_friendneutralfoe) :
+	sprite(passed_sprite),
+	name(passed_name),
+	hpmax(passed_hpmax),
+	hp(passed_hp),
+	damage(passed_damage),
+	attackspeed(passed_attackspeed),
+	speed(passed_speed),
+	defense(passed_defense),
+	skills(passed_skills),
+	hudpicture(passed_hudpicture),
+	friendneutralfoe(passed_friendneutralfoe)
 {
-	sprite = passed_sprite;
+/*	sprite = passed_sprite;
 	name = passed_name;
 	hpmax = passed_hpmax;
 	hp = passed_hp;
@@ -20,33 +31,8 @@ Unit::Unit(Sprite* passed_sprite, std::string passed_name, float passed_hpmax, f
 	//std::copy(passed_skills.begin(), passed_skills.end(), std::back_inserter(skills));
 	//skills.swap(passed_skills);
 	hudpicture = passed_hudpicture;
-	friendneutralfoe = passed_friendneutralfoe;
+	friendneutralfoe = passed_friendneutralfoe;*/
 	//skills.clear();
-
-
-	//Test
-	//lifesurface = NULL;
-	//liferect = { 0, 0, 0, 0 };
-	//select = false;
-	//pre_select = false;
-	//moving = false;
-	//selectedskill = false;
-	//used_skill_number = 0;
-	//used_skill = 0;
-	//move = false;
-	//moved = false;
-	//rightclick = false;
-	//distancecube2x=0;
-	//distancecube2y=0;
-	//coefcube2=0;
-	//differencecube2=0;
-	//i=0;
-	//iteratorcube2x = 0;
-	//iteratorcube2y = 0;
-	//iteratorcube2xmax = 0;
-	//iteratorcube2ymax = 0;
-
-
 }
 
 
@@ -466,115 +452,121 @@ void Unit::setaction_start(bool passed_action_start)
 
 void Unit::moveunit(int destinationX, int destinationY)
 {
+	/// TODO : Utiliser speed
+	/// TODO : Changer les animations pour pouvoir 
+	///			changer de direction
 	if (reset_action)
 	{
 		move = true;
 		reset_action = false;
 	}
+	if (move == true)
+	{
+		movingx.clear();
+		movingy.clear();
 
-		if (move == true)
+		//mousexy[0] = vector_mousexy.at(0).first;
+		//mousexy[1] = vector_mousexy.at(0).second;
+
+		mousexy[0] = destinationX;
+		mousexy[1] = destinationY;
+
+		if (mousexy[0] <= sprite->GetX() +sprite->GetWidth()/2)
 		{
-			movingx.clear();
-			movingy.clear();
-
-			//mousexy[0] = vector_mousexy.at(0).first;
-			//mousexy[1] = vector_mousexy.at(0).second;
-
-			mousexy[0] = destinationX;
-			mousexy[1] = destinationY;
-
-			if (mousexy[0] <= sprite->GetX() +sprite->GetWidth()/2)
+			distancecube2x = sprite->GetX() + sprite->GetWidth() / 2 - mousexy[0];
+			for (i = 0; i < distancecube2x; ++i)
 			{
-				distancecube2x = sprite->GetX() + sprite->GetWidth() / 2 - mousexy[0];
-				for (i = 0; i < distancecube2x; ++i)
-				{
-					movingx.push_back(sprite->GetX() - i);
-				}
+				movingx.push_back(sprite->GetX() - i);
 			}
-			else if (mousexy[0] > sprite->GetX() - sprite->GetWidth() / 2)
-			{
-				distancecube2x = mousexy[0] - sprite->GetX() - sprite->GetWidth() / 2;
-				for (i = 0; i < distancecube2x; ++i)
-				{
-					movingx.push_back(sprite->GetX() + i);
-				}
-			}
-			if (mousexy[1] <= sprite->GetY() + sprite->GetHeight() / 2)
-			{
-				distancecube2y = sprite->GetY() + sprite->GetHeight() / 2 - mousexy[1];
-				for (i = 0; i < distancecube2y; ++i)
-				{
-					movingy.push_back(sprite->GetY() - i);
-				}
-			}
-			else if (mousexy[1] > sprite->GetY() - sprite->GetHeight() / 2)
-			{
-				distancecube2y = mousexy[1] - sprite->GetY() - sprite->GetHeight() / 2;
-				for (i = 0; i < distancecube2y; ++i)
-				{
-					movingy.push_back(sprite->GetY() + i);
-				}
-			}
-			//distancecube2y += distancecube2y == 0;
-			coefcube2 = (double)distancecube2x / (double)distancecube2y;
-			iteratorcube2x = distancecube2x;
-			iteratorcube2y = distancecube2y;
-			iteratorcube2xmax = 0;
-			iteratorcube2ymax = 0;
-			moving = true;
-			move = false;
-
 		}
-
-		if (moving == true)
+		else if (mousexy[0] > sprite->GetX() - sprite->GetWidth() / 2)
 		{
-			//printf("%f\n", coefcube2);
-			//printf("%f\n", coefcube2);
-			//printf("%f\n", coefcube2);
-			//printf("%f\n", coefcube2);
-			choose_animrow(2);
-			if (coefcube2 >= 1)
+			distancecube2x = mousexy[0] - sprite->GetX() - sprite->GetWidth() / 2;
+			for (i = 0; i < distancecube2x; ++i)
 			{
-				if (iteratorcube2xmax < movingx.size())
-				{
-					++iteratorcube2xmax;
-					sprite->SetX(movingx[++iteratorcube2x - distancecube2x - 1]);
-				}
-				else
-				{
-					action_to_do = 0;
-					moving = false;
-					action_over = true;
-				}
-				if (iteratorcube2ymax < movingy.size() && iteratorcube2ymax*coefcube2 <= iteratorcube2xmax)
-				{
-					++iteratorcube2ymax;
-					sprite->SetY(movingy[++iteratorcube2y - distancecube2y - 1]);
-				}
+				movingx.push_back(sprite->GetX() + i);
+			}
+		}
+		if (mousexy[1] <= sprite->GetY() + sprite->GetHeight() / 2)
+		{
+			distancecube2y = sprite->GetY() + sprite->GetHeight() / 2 - mousexy[1];
+			for (i = 0; i < distancecube2y; ++i)
+			{
+				movingy.push_back(sprite->GetY() - i);
+			}
+		}
+		else if (mousexy[1] > sprite->GetY() - sprite->GetHeight() / 2)
+		{
+			distancecube2y = mousexy[1] - sprite->GetY() - sprite->GetHeight() / 2;
+			for (i = 0; i < distancecube2y; ++i)
+			{
+				movingy.push_back(sprite->GetY() + i);
+			}
+		}
+		//distancecube2y += distancecube2y == 0;
+		coefcube2 = (double)distancecube2x / (double)distancecube2y;
+		iteratorcube2x = distancecube2x;
+		iteratorcube2y = distancecube2y;
+		iteratorcube2xmax = 0;
+		iteratorcube2ymax = 0;
+		moving = true;
+		move = false;
 
+	}
+
+	if (moving == true)
+	{
+		//printf("%f\n", coefcube2);
+		//printf("%f\n", coefcube2);
+		//printf("%f\n", coefcube2);
+		//printf("%f\n", coefcube2);
+
+		/// TODO : ici choisir la direction
+		///		faire un code pour choisir la direction en fonction des pixels
+		choose_animrow(2);
+		
+		if (coefcube2 >= 1)
+		{
+			if (iteratorcube2xmax < movingx.size())
+			{
+				++iteratorcube2xmax;
+				sprite->SetX(movingx[++iteratorcube2x - distancecube2x - 1]);
 			}
 			else
 			{
-
-				if (iteratorcube2xmax < movingx.size() && iteratorcube2ymax*coefcube2 >= iteratorcube2xmax)
-				{
-					++iteratorcube2xmax;
-					sprite->SetX(movingx[++iteratorcube2x - distancecube2x - 1]);
-				}
-				if (iteratorcube2ymax < movingy.size())
-				{
-					++iteratorcube2ymax;
-					sprite->SetY(movingy[++iteratorcube2y - distancecube2y - 1]);
-				}
-				else
-				{
-					action_to_do = 0;
-					moving = false;
-					action_over = true;
-				}
+				action_to_do = 0;
+				moving = false;
+				action_over = true;
+			}
+			if (iteratorcube2ymax < movingy.size() && iteratorcube2ymax*coefcube2 <= iteratorcube2xmax)
+			{
+				++iteratorcube2ymax;
+				sprite->SetY(movingy[++iteratorcube2y - distancecube2y - 1]);
 			}
 
 		}
+		else
+		{
+
+			if (iteratorcube2xmax < movingx.size() && iteratorcube2ymax*coefcube2 >= iteratorcube2xmax)
+			{
+				++iteratorcube2xmax;
+				sprite->SetX(movingx[++iteratorcube2x - distancecube2x - 1]);
+			}
+			if (iteratorcube2ymax < movingy.size())
+			{
+				++iteratorcube2ymax;
+				sprite->SetY(movingy[++iteratorcube2y - distancecube2y - 1]);
+			}
+			else
+			{
+				action_to_do = 0;
+				moving = false;
+				action_over = true;
+			}
+		}
+
+	}
 }
 
 void Unit::drawlife(SDL_Renderer *renderer, float camerax, float cameray)
@@ -759,84 +751,8 @@ void Unit::choose_animrow(int passed_usedanim)		//switch case a faire
 
 void Unit::action()
 {
-	//if (special_action_over)
-	//{
-		//current_action = action_to_do;
-		////if (actions_list.size() > 0)
-		////{
-		////	actions_list.erase(actions_list.begin());
-		////}
-
-			
-		
-
-		//if (reset_action && actions_list.size() > 0)
-		//{
-		//	if (special_action_over)
-		//	{
-		//
-		//		first_action_temp = actions_list.back();
-		//		actions_list.clear();
-		//		actions_list.push_back(first_action_temp);
-		//		special_action_over = false;
-		//	}
-		//	//else
-		//	//{
-		//	//	first_action_temp = actions_list.back();
-		//	//	actions_list.clear();
-		//	//	actions_list.push_back(first_action_temp);
-		//	//}
-		//}
-
-		//if (next_action)
-		//{
-		//	if (actions_list.size() > 0)
-		//	{
-		//		current_action = actions_list.at(0);
-		//		mousexy[0] = vector_mousexy[0].first;
-		//		mousexy[1] = vector_mousexy[0].second;
-		//	}
-		//	else
-		//	{
-		//		current_action = 0;
-		//	}
-		//}
-
 	if (action_over)
 	{
-		//if (actions_list.size() > 0)
-		//{
-		//	//if (actions_list.at(0) < 3)
-		//	//{
-		//	//	
-		//	//}
-		//	//actions_list.erase(actions_list.begin());
-		//	//if (vector_mousexy.size() > 0)
-		//	//{
-		//	//	vector_mousexy.erase(vector_mousexy.begin());
-		//	//}
-		//
-		//
-		//	//if (skills_bool.size() == 0)
-		//	//{
-		//	//	used_skill_number = 0;
-		//	//}
-		//
-		//	//used_skill_number = skills_bool.size();
-		//	//if (skills_bool.size() == 0)
-		//	//{
-		//	//	used_skill_number = 0;
-		//	//}
-		//	//if (skills_bool.size() > 0)
-		//	//{
-		//	//	
-		//	//	//if (skill_over)
-		//	//	//{
-		//	//	//	skills_bool.erase(skills_bool.begin());
-		//	//	//	skill_over = false;
-		//	//	//}
-		//	//}
-		//}
 		action_start = true;
 		action_over = false;
 	}
@@ -851,6 +767,7 @@ void Unit::action()
 				mousexy[0] = vector_mousexy[0].first;
 				mousexy[1] = vector_mousexy[0].second;
 				actions_list.erase(actions_list.begin());
+
 				if (vector_mousexy.size() > 0)
 				{
 					vector_mousexy.erase(vector_mousexy.begin());
@@ -868,14 +785,6 @@ void Unit::action()
 			action_start = false;
 		}
 	}
-
-	//}
-
-	//if (skill_over = true)
-	//{
-	//	skill_over = false;
-	//}
-	//skill_go = false;
 
 	switch (current_action)
 	{
